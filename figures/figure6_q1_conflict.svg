@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="985px" height="525px" viewBox="0 0 985 525" font-family="Liberation Sans, Arial, Helvetica, sans-serif"><rect width="985" height="525" fill="white"/><path d="M95,140 L95,388 L390,270 z" fill="#d03b3b" fill-opacity="0.07" stroke="none"/>
+<path d="M95.0,211.0 L95.0,324.0" fill="none" stroke="#d03b3b" stroke-width="1.5"/>
+<path d="M95.0,324.0 L92.0,317.7 L98.0,317.7 z" fill="#d03b3b"/>
+<text x="103.0" y="255.5" font-size="14" font-weight="bold" fill="white" text-anchor="start" stroke="white" stroke-width="3">GUARDIAN_OF</text><text x="103.0" y="255.5" font-size="14" font-weight="bold" fill="#d03b3b" text-anchor="start">GUARDIAN_OF</text>
+<text x="103.0" y="270.5" font-size="13" fill="white" text-anchor="start" stroke="white" stroke-width="3">{&#x27;Mother&#x27;}</text><text x="103.0" y="270.5" font-size="13" fill="#56616b" text-anchor="start">{&#x27;Mother&#x27;}</text>
+<path d="M153.5,364.6 L330.6,293.8" fill="none" stroke="#d03b3b" stroke-width="1.5"/>
+<path d="M330.6,293.8 L325.8,298.9 L323.6,293.4 z" fill="#d03b3b"/>
+<text x="256.0" y="357.2" font-size="14" font-weight="bold" fill="white" text-anchor="middle" stroke="white" stroke-width="3">TOOK</text><text x="256.0" y="357.2" font-size="14" font-weight="bold" fill="#d03b3b" text-anchor="middle">TOOK</text>
+<text x="256.0" y="372.2" font-size="13" fill="white" text-anchor="middle" stroke="white" stroke-width="3">{status: &#x27;ENROLLED&#x27;}</text><text x="256.0" y="372.2" font-size="13" fill="#56616b" text-anchor="middle">{status: &#x27;ENROLLED&#x27;}</text>
+<path d="M160.0,168.6 L331.4,244.2" fill="none" stroke="#d03b3b" stroke-width="1.5"/>
+<path d="M331.4,244.2 L324.4,244.3 L326.8,238.9 z" fill="#d03b3b"/>
+<text x="267.7" y="196.4" font-size="14" font-weight="bold" fill="white" text-anchor="middle" stroke="white" stroke-width="3">LEADS</text><text x="267.7" y="196.4" font-size="14" font-weight="bold" fill="#d03b3b" text-anchor="middle">LEADS</text>
+<path d="M453.0,270.0 L556.0,270.0" fill="none" stroke="#7a8591" stroke-width="1.5"/>
+<path d="M556.0,270.0 L549.7,273.0 L549.7,267.0 z" fill="#7a8591"/>
+<text x="504.5" y="262.0" font-size="13" font-weight="bold" fill="white" text-anchor="middle" stroke="white" stroke-width="3">OF_SUBJECT</text><text x="504.5" y="262.0" font-size="13" font-weight="bold" fill="#7a8591" text-anchor="middle">OF_SUBJECT</text>
+<path d="M620.0,143.0 L620.0,206.0" fill="none" stroke="#7a8591" stroke-width="1.5"/>
+<path d="M620.0,206.0 L617.0,199.7 L623.0,199.7 z" fill="#7a8591"/>
+<text x="608.0" y="178.5" font-size="13" font-weight="bold" fill="white" text-anchor="end" stroke="white" stroke-width="3">OF_SUBJECT</text><text x="608.0" y="178.5" font-size="13" font-weight="bold" fill="#7a8591" text-anchor="end">OF_SUBJECT</text>
+<path d="M789.0,92.0 L672.0,92.0" fill="none" stroke="#0a8a0a" stroke-width="1.5"/>
+<path d="M672.0,92.0 L678.3,89.0 L678.3,95.0 z" fill="#0a8a0a"/>
+<text x="730.5" y="84.0" font-size="14" font-weight="bold" fill="white" text-anchor="middle" stroke="white" stroke-width="3">LEADS</text><text x="730.5" y="84.0" font-size="14" font-weight="bold" fill="#0a8a0a" text-anchor="middle">LEADS</text>
+<path d="M860.0,163.0 L860.0,256.0" fill="none" stroke="#7a8591" stroke-width="1.5"/>
+<path d="M860.0,256.0 L857.0,249.7 L863.0,249.7 z" fill="#7a8591"/>
+<text x="870.0" y="239.5" font-size="13" font-weight="bold" fill="white" text-anchor="start" stroke="white" stroke-width="3">GUARDIAN_OF</text><text x="870.0" y="239.5" font-size="13" font-weight="bold" fill="#7a8591" text-anchor="start">GUARDIAN_OF</text>
+<circle cx="95" cy="140" r="70" fill="#2E5A87" stroke="#2E5A87" stroke-width="1.5"/>
+<text x="95" y="128.2" font-size="15" font-weight="bold" fill="white" text-anchor="middle">Priya Raman</text>
+<text x="95" y="145.2" font-size="13.5" font-weight="normal" fill="white" text-anchor="middle">:Staff:Student</text>
+<text x="95" y="162.2" font-size="13.5" font-weight="normal" fill="white" text-anchor="middle">:Guardian</text>
+<circle cx="95" cy="388" r="62" fill="#2E5A87" stroke="#2E5A87" stroke-width="1.5"/>
+<text x="95" y="384.8" font-size="15" font-weight="bold" fill="white" text-anchor="middle">Ethan Brady</text>
+<text x="95" y="401.8" font-size="13.5" font-weight="normal" fill="white" text-anchor="middle">:Student</text>
+<circle cx="390" cy="270" r="62" fill="#2F7D4F" stroke="#2F7D4F" stroke-width="1.5"/>
+<text x="390" y="266.8" font-size="15" font-weight="bold" fill="white" text-anchor="middle">SUB-0004</text>
+<text x="390" y="283.8" font-size="13.5" font-weight="normal" fill="white" text-anchor="middle">@RDLD 2026T3</text>
+<circle cx="620" cy="270" r="62" fill="#2F7D4F" stroke="#2F7D4F" stroke-width="1.5"/>
+<text x="620" y="258.2" font-size="15" font-weight="bold" fill="white" text-anchor="middle">SUB-0004</text>
+<text x="620" y="275.2" font-size="13.5" font-weight="normal" fill="white" text-anchor="middle">Industry</text>
+<text x="620" y="292.2" font-size="13.5" font-weight="normal" fill="white" text-anchor="middle">Placement</text>
+<circle cx="620" cy="92" r="50" fill="#2F7D4F" stroke="#2F7D4F" stroke-width="1.5"/>
+<text x="620" y="88.9" font-size="14" font-weight="bold" fill="white" text-anchor="middle">SUB-0004</text>
+<text x="620" y="104.9" font-size="12.5" font-weight="normal" fill="white" text-anchor="middle">@CBLT T4</text>
+<circle cx="860" cy="92" r="70" fill="#2E5A87" stroke="#2E5A87" stroke-width="1.5"/>
+<text x="860" y="80.2" font-size="15" font-weight="bold" fill="white" text-anchor="middle">Meena</text>
+<text x="860" y="97.2" font-size="13.5" font-weight="normal" fill="white" text-anchor="middle">Chandra</text>
+<text x="860" y="114.2" font-size="13.5" font-weight="normal" fill="white" text-anchor="middle">:Staff:Guardian</text>
+<circle cx="860" cy="320" r="62" fill="#2E5A87" stroke="#2E5A87" stroke-width="1.5"/>
+<text x="860" y="308.2" font-size="15" font-weight="bold" fill="white" text-anchor="middle">Aarav</text>
+<text x="860" y="325.2" font-size="13.5" font-weight="normal" fill="white" text-anchor="middle">Chandra</text>
+<text x="860" y="342.2" font-size="13.5" font-weight="normal" fill="white" text-anchor="middle">:Student</text>
+<text x="200" y="490" font-size="15" font-weight="bold" fill="#d03b3b" text-anchor="start">CONFLICT: the pattern closes on the same node - she would assess her own son;</text>
+<text x="200" y="510" font-size="15" font-weight="bold" fill="#d03b3b" text-anchor="start">not yet graded, so the assessor can still be changed.</text>
+<text x="688" y="178" font-size="14.5" font-weight="bold" fill="#0a8a0a" text-anchor="start">ELIGIBLE ASSESSOR</text>
+<text x="688" y="197" font-size="13.5" font-weight="normal" fill="#56616b" text-anchor="start">leads SUB-0004, not related</text>
+<text x="688" y="215" font-size="13.5" font-weight="normal" fill="#56616b" text-anchor="start">to Ethan, blue card valid</text>
+<text x="688" y="233" font-size="13.5" font-weight="normal" fill="#56616b" text-anchor="start">past the end of term</text>
+<text x="975" y="410" font-size="13.5" font-weight="normal" fill="#56616b" text-anchor="end">no shared</text>
+<text x="975" y="428" font-size="13.5" font-weight="normal" fill="#56616b" text-anchor="end">class: no</text>
+<text x="975" y="446" font-size="13.5" font-weight="normal" fill="#56616b" text-anchor="end">conflict</text></svg>

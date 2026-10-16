@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000px" height="800px" viewBox="0 0 1000 800" font-family="Liberation Sans, Arial, Helvetica, sans-serif"><rect width="1000" height="800" fill="white"/><text x="16" y="26" font-size="15" font-weight="bold" fill="#1d2329" text-anchor="start">Optimisation</text>
+<text x="236" y="26" font-size="15" font-weight="bold" fill="#1d2329" text-anchor="start">Model A - direct translation</text>
+<text x="668" y="26" font-size="15" font-weight="bold" fill="#1d2329" text-anchor="start">Model B - optimised</text>
+<line x1="10" y1="36" x2="990" y2="36" stroke="#c3c2b7" stroke-width="1.2"/>
+<text x="16" y="105.0" font-size="17" font-weight="bold" fill="#1d2329" text-anchor="start">O1</text>
+<text x="52" y="105.0" font-size="15" font-weight="bold" fill="#1d2329" text-anchor="start">Specialisation</text>
+<text x="52" y="124.0" font-size="15" font-weight="bold" fill="#1d2329" text-anchor="start">as labels</text>
+<text x="52" y="149.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="start">removing it:</text>
+<text x="52" y="166.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="start">Q1 +45%, Q2 +7%</text>
+<path d="M618,119.0 l20,0" stroke="#898781" stroke-width="2.5"/><path d="M638,113.0 l10,6 l-10,6 z" fill="#898781"/>
+<text x="16" y="255.0" font-size="17" font-weight="bold" fill="#1d2329" text-anchor="start">O2</text>
+<text x="52" y="255.0" font-size="15" font-weight="bold" fill="#1d2329" text-anchor="start">Junction + 1:1</text>
+<text x="52" y="274.0" font-size="15" font-weight="bold" fill="#1d2329" text-anchor="start">dependant folded</text>
+<text x="52" y="299.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="start">removing it:</text>
+<text x="52" y="316.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="start">Q4 +24%, W1 +18%</text>
+<line x1="10" y1="194" x2="990" y2="194" stroke="#e1e0d9" stroke-width="1.2"/>
+<path d="M618,269.0 l20,0" stroke="#898781" stroke-width="2.5"/><path d="M638,263.0 l10,6 l-10,6 z" fill="#898781"/>
+<text x="16" y="405.0" font-size="17" font-weight="bold" fill="#1d2329" text-anchor="start">O3</text>
+<text x="52" y="405.0" font-size="15" font-weight="bold" fill="#1d2329" text-anchor="start">Multi-valued</text>
+<text x="52" y="424.0" font-size="15" font-weight="bold" fill="#1d2329" text-anchor="start">attribute pivoted</text>
+<text x="52" y="449.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="start">removing it:</text>
+<text x="52" y="466.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="start">Q2 -5%, W1 +3%</text>
+<line x1="10" y1="344" x2="990" y2="344" stroke="#e1e0d9" stroke-width="1.2"/>
+<path d="M618,419.0 l20,0" stroke="#898781" stroke-width="2.5"/><path d="M638,413.0 l10,6 l-10,6 z" fill="#898781"/>
+<text x="16" y="555.0" font-size="17" font-weight="bold" fill="#1d2329" text-anchor="start">O4</text>
+<text x="52" y="555.0" font-size="15" font-weight="bold" fill="#1d2329" text-anchor="start">Derived value</text>
+<text x="52" y="574.0" font-size="15" font-weight="bold" fill="#1d2329" text-anchor="start">materialised</text>
+<text x="52" y="599.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="start">removing it:</text>
+<text x="52" y="616.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="start">Q3 +48%, W2 +27%</text>
+<line x1="10" y1="494" x2="990" y2="494" stroke="#e1e0d9" stroke-width="1.2"/>
+<path d="M618,569.0 l20,0" stroke="#898781" stroke-width="2.5"/><path d="M638,563.0 l10,6 l-10,6 z" fill="#898781"/>
+<text x="16" y="705.0" font-size="17" font-weight="bold" fill="#1d2329" text-anchor="start">O5</text>
+<text x="52" y="705.0" font-size="15" font-weight="bold" fill="#1d2329" text-anchor="start">Sequence made</text>
+<text x="52" y="724.0" font-size="15" font-weight="bold" fill="#1d2329" text-anchor="start">explicit</text>
+<text x="52" y="749.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="start">removing it:</text>
+<text x="52" y="766.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="start">Q2 +5%</text>
+<line x1="10" y1="644" x2="990" y2="644" stroke="#e1e0d9" stroke-width="1.2"/>
+<path d="M618,719.0 l20,0" stroke="#898781" stroke-width="2.5"/><path d="M638,713.0 l10,6 l-10,6 z" fill="#898781"/>
+<circle cx="250" cy="111.0" r="36" fill="#2E5A87" stroke="#2E5A87" stroke-width="1.5"/>
+<text x="250" y="115.9" font-size="14" font-weight="bold" fill="white" text-anchor="middle">Staff</text>
+<circle cx="405" cy="111.0" r="36" fill="#2E5A87" stroke="#2E5A87" stroke-width="1.5"/>
+<text x="405" y="115.9" font-size="14" font-weight="bold" fill="white" text-anchor="middle">Person</text>
+<circle cx="560" cy="111.0" r="36" fill="#2E5A87" stroke="#2E5A87" stroke-width="1.5"/>
+<text x="560" y="115.5" font-size="13" font-weight="bold" fill="white" text-anchor="middle">Guardian</text>
+<path d="M287.0,111.0 L367.0,111.0" fill="none" stroke="#2E5A87" stroke-width="1.5"/>
+<path d="M367.0,111.0 L360.7,114.0 L360.7,108.0 z" fill="#2E5A87"/>
+<text x="327.0" y="105.0" font-size="13" font-weight="bold" fill="white" text-anchor="middle" stroke="white" stroke-width="3">IS_A</text><text x="327.0" y="105.0" font-size="13" font-weight="bold" fill="#2E5A87" text-anchor="middle">IS_A</text>
+<path d="M523.0,111.0 L443.0,111.0" fill="none" stroke="#2E5A87" stroke-width="1.5"/>
+<path d="M443.0,111.0 L449.3,108.0 L449.3,114.0 z" fill="#2E5A87"/>
+<text x="483.0" y="105.0" font-size="13" font-weight="bold" fill="white" text-anchor="middle" stroke="white" stroke-width="3">IS_A</text><text x="483.0" y="105.0" font-size="13" font-weight="bold" fill="#2E5A87" text-anchor="middle">IS_A</text>
+<text x="405" y="173.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="middle">one person = up to 4 nodes</text>
+<circle cx="712" cy="119.0" r="46" fill="#2E5A87" stroke="#2E5A87" stroke-width="1.5"/>
+<text x="712" y="108.2" font-size="13.5" font-weight="bold" fill="white" text-anchor="middle">Person</text>
+<text x="712" y="123.7" font-size="12.0" font-weight="normal" fill="white" text-anchor="middle">:Staff</text>
+<text x="712" y="139.2" font-size="12.0" font-weight="normal" fill="white" text-anchor="middle">:Guardian</text>
+<text x="772" y="111.0" font-size="14" font-weight="normal" fill="#1d2329" text-anchor="start">one node,</text>
+<text x="772" y="129.0" font-size="14" font-weight="normal" fill="#1d2329" text-anchor="start">several labels</text>
+<text x="772" y="149.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="start">(p:Staff&amp;Guardian)</text>
+<circle cx="238" cy="239.0" r="36" fill="#2E5A87" stroke="#2E5A87" stroke-width="1.5"/>
+<text x="238" y="243.7" font-size="13.5" font-weight="bold" fill="white" text-anchor="middle">Student</text>
+<circle cx="410" cy="239.0" r="42" fill="#2F7D4F" stroke="#2F7D4F" stroke-width="1.5"/>
+<text x="410" y="236.1" font-size="12.5" font-weight="bold" fill="white" text-anchor="middle">Subject</text>
+<text x="410" y="250.6" font-size="11.0" font-weight="normal" fill="white" text-anchor="middle">Enrolment</text>
+<circle cx="565" cy="239.0" r="40" fill="#2F7D4F" stroke="#2F7D4F" stroke-width="1.5"/>
+<text x="565" y="236.1" font-size="12.5" font-weight="bold" fill="white" text-anchor="middle">Course</text>
+<text x="565" y="250.6" font-size="11.0" font-weight="normal" fill="white" text-anchor="middle">Offering</text>
+<circle cx="410" cy="319.0" r="21" fill="#2F7D4F" stroke="#2F7D4F" stroke-width="1.5"/>
+<text x="410" y="322.9" font-size="11" font-weight="bold" fill="white" text-anchor="middle">Result</text>
+<path d="M275.0,239.0 L366.0,239.0" fill="none" stroke="#2F7D4F" stroke-width="1.5"/>
+<path d="M366.0,239.0 L359.7,242.0 L359.7,236.0 z" fill="#2F7D4F"/>
+<text x="322" y="220.0" font-size="11.5" font-weight="bold" fill="#2F7D4F" text-anchor="middle">HAS_SUBJECT_</text>
+<text x="322" y="233.0" font-size="11.5" font-weight="bold" fill="#2F7D4F" text-anchor="middle">ENROLMENT</text>
+<path d="M453.0,239.0 L523.0,239.0" fill="none" stroke="#2F7D4F" stroke-width="1.5"/>
+<path d="M523.0,239.0 L516.7,242.0 L516.7,236.0 z" fill="#2F7D4F"/>
+<text x="488" y="231.0" font-size="11.5" font-weight="bold" fill="#2F7D4F" text-anchor="middle">FOR_</text>
+<text x="488" y="261.0" font-size="11.5" font-weight="bold" fill="#2F7D4F" text-anchor="middle">OFFERING</text>
+<path d="M410.0,282.0 L410.0,296.0" fill="none" stroke="#2F7D4F" stroke-width="1.5"/>
+<path d="M410.0,296.0 L407.0,289.7 L413.0,289.7 z" fill="#2F7D4F"/>
+<text x="420" y="295.0" font-size="11.5" font-weight="bold" fill="#2F7D4F" text-anchor="start">HAS_RESULT</text>
+<circle cx="700" cy="269.0" r="36" fill="#2E5A87" stroke="#2E5A87" stroke-width="1.5"/>
+<text x="700" y="273.7" font-size="13.5" font-weight="bold" fill="white" text-anchor="middle">Student</text>
+<circle cx="935" cy="269.0" r="40" fill="#2F7D4F" stroke="#2F7D4F" stroke-width="1.5"/>
+<text x="935" y="266.1" font-size="12.5" font-weight="bold" fill="white" text-anchor="middle">Course</text>
+<text x="935" y="280.6" font-size="11.0" font-weight="normal" fill="white" text-anchor="middle">Offering</text>
+<path d="M737.0,269.0 L893.0,269.0" fill="none" stroke="#2F7D4F" stroke-width="1.5"/>
+<path d="M893.0,269.0 L886.7,272.0 L886.7,266.0 z" fill="#2F7D4F"/>
+<text x="815.0" y="225.0" font-size="14" font-weight="bold" fill="white" text-anchor="middle" stroke="white" stroke-width="3">TOOK</text><text x="815.0" y="225.0" font-size="14" font-weight="bold" fill="#2F7D4F" text-anchor="middle">TOOK</text>
+<text x="815.0" y="240.0" font-size="13" fill="white" text-anchor="middle" stroke="white" stroke-width="3">{status, grade_letter,</text><text x="815.0" y="240.0" font-size="13" fill="#56616b" text-anchor="middle">{status, grade_letter,</text>
+<text x="815.0" y="255.0" font-size="13" fill="white" text-anchor="middle" stroke="white" stroke-width="3">competency_outcome, ...}</text><text x="815.0" y="255.0" font-size="13" fill="#56616b" text-anchor="middle">competency_outcome, ...}</text>
+<circle cx="262" cy="419.0" r="36" fill="#2E5A87" stroke="#2E5A87" stroke-width="1.5"/>
+<text x="262" y="423.9" font-size="14" font-weight="bold" fill="white" text-anchor="middle">Person</text>
+<circle cx="470" cy="385.0" r="30" fill="#56616B" stroke="#56616B" stroke-width="1.5"/>
+<text x="470" y="382.3" font-size="11.5" font-weight="bold" fill="white" text-anchor="middle">Phone</text>
+<text x="470" y="395.8" font-size="10.0" font-weight="normal" fill="white" text-anchor="middle">MOBILE</text>
+<circle cx="470" cy="455.0" r="30" fill="#56616B" stroke="#56616B" stroke-width="1.5"/>
+<text x="470" y="452.3" font-size="11.5" font-weight="bold" fill="white" text-anchor="middle">Phone</text>
+<text x="470" y="465.8" font-size="10.0" font-weight="normal" fill="white" text-anchor="middle">WORK</text>
+<path d="M298.5,413.0 L438.4,390.2" fill="none" stroke="#56616B" stroke-width="1.5"/>
+<path d="M438.4,390.2 L432.6,394.1 L431.7,388.3 z" fill="#56616B"/>
+<text x="362.5" y="391.6" font-size="12" font-weight="bold" fill="white" text-anchor="middle" stroke="white" stroke-width="3">HAS_PHONE</text><text x="362.5" y="391.6" font-size="12" font-weight="bold" fill="#56616B" text-anchor="middle">HAS_PHONE</text>
+<path d="M298.5,425.3 L438.5,449.5" fill="none" stroke="#56616B" stroke-width="1.5"/>
+<path d="M438.5,449.5 L431.7,451.4 L432.7,445.5 z" fill="#56616B"/>
+<text x="362.5" y="459.4" font-size="12" font-weight="bold" fill="white" text-anchor="middle" stroke="white" stroke-width="3">HAS_PHONE</text><text x="362.5" y="459.4" font-size="12" font-weight="bold" fill="#56616B" text-anchor="middle">HAS_PHONE</text>
+<text x="512" y="424.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="start">filter on</text>
+<text x="512" y="440.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="start">type</text>
+<circle cx="712" cy="419.0" r="40" fill="#2E5A87" stroke="#2E5A87" stroke-width="1.5"/>
+<text x="712" y="423.9" font-size="14" font-weight="bold" fill="white" text-anchor="middle">Person</text>
+<text x="768" y="403.0" font-size="14" font-weight="normal" fill="#1d2329" text-anchor="start">phone_mobile</text>
+<text x="768" y="422.0" font-size="14" font-weight="normal" fill="#1d2329" text-anchor="start">phone_home</text>
+<text x="768" y="441.0" font-size="14" font-weight="normal" fill="#1d2329" text-anchor="start">phone_work</text>
+<text x="875" y="422.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="start">(at most one</text>
+<text x="875" y="439.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="start">of each type)</text>
+<circle cx="248" cy="559.0" r="36" fill="#8E3B46" stroke="#8E3B46" stroke-width="1.5"/>
+<text x="248" y="563.4" font-size="12.5" font-weight="bold" fill="white" text-anchor="middle">Payment</text>
+<circle cx="405" cy="559.0" r="36" fill="#8E3B46" stroke="#8E3B46" stroke-width="1.5"/>
+<text x="405" y="563.7" font-size="13.5" font-weight="bold" fill="white" text-anchor="middle">Invoice</text>
+<circle cx="562" cy="559.0" r="36" fill="#8E3B46" stroke="#8E3B46" stroke-width="1.5"/>
+<text x="562" y="556.1" font-size="12.5" font-weight="bold" fill="white" text-anchor="middle">Invoice</text>
+<text x="562" y="570.6" font-size="11.0" font-weight="normal" fill="white" text-anchor="middle">Line</text>
+<path d="M285.0,559.0 L367.0,559.0" fill="none" stroke="#8E3B46" stroke-width="1.5"/>
+<path d="M367.0,559.0 L360.7,562.0 L360.7,556.0 z" fill="#8E3B46"/>
+<text x="326.0" y="553.0" font-size="12" font-weight="bold" fill="white" text-anchor="middle" stroke="white" stroke-width="3">SETTLES</text><text x="326.0" y="553.0" font-size="12" font-weight="bold" fill="#8E3B46" text-anchor="middle">SETTLES</text>
+<path d="M442.0,559.0 L524.0,559.0" fill="none" stroke="#8E3B46" stroke-width="1.5"/>
+<path d="M524.0,559.0 L517.7,562.0 L517.7,556.0 z" fill="#8E3B46"/>
+<text x="483.0" y="553.0" font-size="12" font-weight="bold" fill="white" text-anchor="middle" stroke="white" stroke-width="3">HAS_LINE</text><text x="483.0" y="553.0" font-size="12" font-weight="bold" fill="#8E3B46" text-anchor="middle">HAS_LINE</text>
+<text x="405" y="621.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="middle">balance summed at every query</text>
+<circle cx="712" cy="569.0" r="40" fill="#8E3B46" stroke="#8E3B46" stroke-width="1.5"/>
+<text x="712" y="573.9" font-size="14" font-weight="bold" fill="white" text-anchor="middle">Invoice</text>
+<text x="768" y="560.0" font-size="14" font-weight="normal" fill="#1d2329" text-anchor="start" font-style="italic">/total_amount</text>
+<text x="768" y="579.0" font-size="14" font-weight="normal" fill="#1d2329" text-anchor="start" font-style="italic">/amount_paid</text>
+<text x="768" y="598.0" font-size="14" font-weight="normal" fill="#1d2329" text-anchor="start" font-style="italic">/balance_owing</text>
+<text x="890" y="579.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="start">(refreshed</text>
+<text x="890" y="596.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="start">by import 7.2)</text>
+<circle cx="262" cy="709.0" r="36" fill="#56616B" stroke="#56616B" stroke-width="1.5"/>
+<text x="262" y="706.1" font-size="12.5" font-weight="bold" fill="white" text-anchor="middle">Term</text>
+<text x="262" y="720.6" font-size="11.0" font-weight="normal" fill="white" text-anchor="middle">2026T2</text>
+<circle cx="412" cy="709.0" r="36" fill="#56616B" stroke="#56616B" stroke-width="1.5"/>
+<text x="412" y="706.1" font-size="12.5" font-weight="bold" fill="white" text-anchor="middle">Term</text>
+<text x="412" y="720.6" font-size="11.0" font-weight="normal" fill="white" text-anchor="middle">2026T3</text>
+<circle cx="562" cy="709.0" r="36" fill="#56616B" stroke="#56616B" stroke-width="1.5"/>
+<text x="562" y="706.1" font-size="12.5" font-weight="bold" fill="white" text-anchor="middle">Term</text>
+<text x="562" y="720.6" font-size="11.0" font-weight="normal" fill="white" text-anchor="middle">2026T4</text>
+<text x="412" y="771.0" font-size="13" font-weight="normal" fill="#56616b" text-anchor="middle">next term = ORDER BY start_date</text>
+<circle cx="700" cy="717.0" r="34" fill="#56616B" stroke="#56616B" stroke-width="1.5"/>
+<text x="700" y="714.2" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Term</text>
+<text x="700" y="728.2" font-size="10.5" font-weight="normal" fill="white" text-anchor="middle">2026T2</text>
+<circle cx="825" cy="717.0" r="34" fill="#56616B" stroke="#56616B" stroke-width="1.5"/>
+<text x="825" y="714.2" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Term</text>
+<text x="825" y="728.2" font-size="10.5" font-weight="normal" fill="white" text-anchor="middle">2026T3</text>
+<circle cx="950" cy="717.0" r="34" fill="#56616B" stroke="#56616B" stroke-width="1.5"/>
+<text x="950" y="714.2" font-size="12" font-weight="bold" fill="white" text-anchor="middle">Term</text>
+<text x="950" y="728.2" font-size="10.5" font-weight="normal" fill="white" text-anchor="middle">2026T4</text>
+<path d="M735.0,717.0 L789.0,717.0" fill="none" stroke="#56616B" stroke-width="1.5" stroke-dasharray="5,3"/>
+<path d="M789.0,717.0 L782.7,720.0 L782.7,714.0 z" fill="#56616B"/>
+<path d="M860.0,717.0 L914.0,717.0" fill="none" stroke="#56616B" stroke-width="1.5" stroke-dasharray="5,3"/>
+<path d="M914.0,717.0 L907.7,720.0 L907.7,714.0 z" fill="#56616B"/>
+<text x="825" y="779.0" font-size="13.5" font-weight="bold" fill="#56616B" text-anchor="middle">[:NEXT_TERM] chain</text></svg>

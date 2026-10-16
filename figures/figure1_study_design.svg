@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="904px" height="502px" viewBox="0 0 904 502" font-family="Liberation Sans, Arial, Helvetica, sans-serif"><rect width="904" height="502" fill="white"/><rect x="10" y="8" width="268" height="128" rx="8" fill="#ffffff" stroke="#56616B" stroke-width="1.8"/>
+<rect x="10" y="8" width="268" height="27" rx="8" fill="#56616B"/><rect x="10" y="23" width="268" height="12" fill="#56616B"/>
+<text x="20" y="27.5" font-size="15" font-weight="bold" fill="white">1  Source (Assessment 2)</text>
+<text x="20" y="56" font-size="14" fill="#1d2329">SQLite: 26 tables, 600 rows</text>
+<text x="20" y="75" font-size="14" fill="#1d2329">A2 feedback fixed: debt</text>
+<text x="20" y="94" font-size="14" fill="#1d2329">query, category triggers,</text>
+<text x="20" y="113" font-size="14" fill="#1d2329">complete UML</text>
+<text x="20" y="132" font-size="14" fill="#1d2329"></text>
+<rect x="318" y="8" width="268" height="128" rx="8" fill="#ffffff" stroke="#56616B" stroke-width="1.8"/>
+<rect x="318" y="8" width="268" height="27" rx="8" fill="#56616B"/><rect x="318" y="23" width="268" height="12" fill="#56616B"/>
+<text x="328" y="27.5" font-size="15" font-weight="bold" fill="white">2  Export</text>
+<text x="328" y="56" font-size="14" fill="#1d2329">26 CSV files, one per table</text>
+<text x="328" y="75" font-size="14" fill="#1d2329">header row; NULL = empty</text>
+<text x="328" y="94" font-size="14" fill="#1d2329">field; loaded unchanged</text>
+<text x="328" y="113" font-size="14" fill="#1d2329">into both graph models</text>
+<rect x="626" y="8" width="268" height="128" rx="8" fill="#ffffff" stroke="#2E5A87" stroke-width="1.8"/>
+<rect x="626" y="8" width="268" height="27" rx="8" fill="#2E5A87"/><rect x="626" y="23" width="268" height="12" fill="#2E5A87"/>
+<text x="636" y="27.5" font-size="15" font-weight="bold" fill="white">3  Graph modelling</text>
+<text x="636" y="56" font-size="14" fill="#1d2329">EER -&gt; property graph</text>
+<text x="636" y="75" font-size="14" fill="#1d2329">Model A: general rules</text>
+<text x="636" y="94" font-size="14" fill="#1d2329">Model B: + 5 optimisations</text>
+<text x="636" y="113" font-size="14" fill="#1d2329">keys -&gt; 28 constraints</text>
+<rect x="626" y="186" width="268" height="128" rx="8" fill="#ffffff" stroke="#2E5A87" stroke-width="1.8"/>
+<rect x="626" y="186" width="268" height="27" rx="8" fill="#2E5A87"/><rect x="626" y="201" width="268" height="12" fill="#2E5A87"/>
+<text x="636" y="205.5" font-size="15" font-weight="bold" fill="white">4  Implementation</text>
+<text x="636" y="234" font-size="14" fill="#1d2329">import.txt: constraints,</text>
+<text x="636" y="253" font-size="14" fill="#1d2329">indexes, LOAD CSV,</text>
+<text x="636" y="272" font-size="14" fill="#1d2329">derived NEXT_TERM and</text>
+<text x="636" y="291" font-size="14" fill="#1d2329">balances: 323 nodes, 633 rels</text>
+<rect x="318" y="186" width="268" height="128" rx="8" fill="#ffffff" stroke="#2F7D4F" stroke-width="1.8"/>
+<rect x="318" y="186" width="268" height="27" rx="8" fill="#2F7D4F"/><rect x="318" y="201" width="268" height="12" fill="#2F7D4F"/>
+<text x="328" y="205.5" font-size="15" font-weight="bold" fill="white">5  Verification</text>
+<text x="328" y="234" font-size="14" fill="#1d2329">count and integrity checks</text>
+<text x="328" y="253" font-size="14" fill="#1d2329">3,143 cell-level checks over</text>
+<text x="328" y="272" font-size="14" fill="#1d2329">all 600 rows: 0 mismatches</text>
+<text x="328" y="291" font-size="14" fill="#1d2329">Cypher checked by Neo4j parser</text>
+<rect x="10" y="186" width="268" height="128" rx="8" fill="#ffffff" stroke="#B26A1B" stroke-width="1.8"/>
+<rect x="10" y="186" width="268" height="27" rx="8" fill="#B26A1B"/><rect x="10" y="201" width="268" height="12" fill="#B26A1B"/>
+<text x="20" y="205.5" font-size="15" font-weight="bold" fill="white">6  Modelling experiment</text>
+<text x="20" y="234" font-size="14" fill="#1d2329">6-query workload on Model A,</text>
+<text x="20" y="253" font-size="14" fill="#1d2329">Model B and 5 ablations;</text>
+<text x="20" y="272" font-size="14" fill="#1d2329">cost = scans + seeks +</text>
+<text x="20" y="291" font-size="14" fill="#1d2329">expansions + property reads</text>
+<rect x="10" y="364" width="268" height="128" rx="8" fill="#ffffff" stroke="#B26A1B" stroke-width="1.8"/>
+<rect x="10" y="364" width="268" height="27" rx="8" fill="#B26A1B"/><rect x="10" y="379" width="268" height="12" fill="#B26A1B"/>
+<text x="20" y="383.5" font-size="15" font-weight="bold" fill="white">7  Query use cases</text>
+<text x="20" y="412" font-size="14" fill="#1d2329">Q1 conflict of interest</text>
+<text x="20" y="431" font-size="14" fill="#1d2329">Q2 blue card sweep</text>
+<text x="20" y="450" font-size="14" fill="#1d2329">Q3 campus debt (A2 fix)</text>
+<text x="20" y="469" font-size="14" fill="#1d2329">Q4 prerequisite breaches</text>
+<rect x="318" y="364" width="268" height="128" rx="8" fill="#ffffff" stroke="#8E3B46" stroke-width="1.8"/>
+<rect x="318" y="364" width="268" height="27" rx="8" fill="#8E3B46"/><rect x="318" y="379" width="268" height="12" fill="#8E3B46"/>
+<text x="328" y="383.5" font-size="15" font-weight="bold" fill="white">8  Centrality (GDS)</text>
+<text x="328" y="412" font-size="14" fill="#1d2329">7 algorithms vs ground truth</text>
+<text x="328" y="431" font-size="14" fill="#1d2329">(efficiency loss, students</text>
+<text x="328" y="450" font-size="14" fill="#1d2329">taught); Spearman, bootstrap</text>
+<text x="328" y="469" font-size="14" fill="#1d2329">CI, robustness to data loss</text>
+<rect x="626" y="364" width="268" height="128" rx="8" fill="#ffffff" stroke="#8E3B46" stroke-width="1.8"/>
+<rect x="626" y="364" width="268" height="27" rx="8" fill="#8E3B46"/><rect x="626" y="379" width="268" height="12" fill="#8E3B46"/>
+<text x="636" y="383.5" font-size="15" font-weight="bold" fill="white">9  Similarity (GDS)</text>
+<text x="636" y="412" font-size="14" fill="#1d2329">NodeSimilarity x 3 metrics</text>
+<text x="636" y="431" font-size="14" fill="#1d2329">x 2 feature sets; KNN x 3;</text>
+<text x="636" y="450" font-size="14" fill="#1d2329">purity, leave-one-out vs</text>
+<text x="636" y="469" font-size="14" fill="#1d2329">baselines, ties, agreement</text>
+<path d="M278.0,72.0 L318.0,72.0" fill="none" stroke="#898781" stroke-width="2"/>
+<path d="M318.0,72.0 L309.8,75.8 L309.8,68.2 z" fill="#898781"/>
+<path d="M586.0,72.0 L626.0,72.0" fill="none" stroke="#898781" stroke-width="2"/>
+<path d="M626.0,72.0 L617.8,75.8 L617.8,68.2 z" fill="#898781"/>
+<path d="M760.0,136.0 L760.0,186.0" fill="none" stroke="#898781" stroke-width="2"/>
+<path d="M760.0,186.0 L756.2,177.8 L763.8,177.8 z" fill="#898781"/>
+<path d="M626.0,250.0 L586.0,250.0" fill="none" stroke="#898781" stroke-width="2"/>
+<path d="M586.0,250.0 L594.2,246.2 L594.2,253.8 z" fill="#898781"/>
+<path d="M318.0,250.0 L278.0,250.0" fill="none" stroke="#898781" stroke-width="2"/>
+<path d="M278.0,250.0 L286.2,246.2 L286.2,253.8 z" fill="#898781"/>
+<path d="M452.0,314.0 L452.0,364.0" fill="none" stroke="#898781" stroke-width="2"/>
+<path d="M452.0,364.0 L448.2,355.8 L455.8,355.8 z" fill="#898781"/>
+<path d="M144.0,339 L760.0,339" stroke="#898781" stroke-width="2" fill="none"/>
+<path d="M144.0,339.0 L144.0,364.0" fill="none" stroke="#898781" stroke-width="2"/>
+<path d="M144.0,364.0 L140.2,355.8 L147.8,355.8 z" fill="#898781"/>
+<path d="M760.0,339.0 L760.0,364.0" fill="none" stroke="#898781" stroke-width="2"/>
+<path d="M760.0,364.0 L756.2,355.8 L763.8,355.8 z" fill="#898781"/>
+<circle cx="452.0" cy="339" r="3.5" fill="#898781"/></svg>
