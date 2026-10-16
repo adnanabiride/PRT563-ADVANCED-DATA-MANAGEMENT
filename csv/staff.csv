@@ -1,0 +1,11 @@
+person_id,staff_no,position_title,employment_type,blue_card_expiry,supervisor_person_id
+P1011,E100001,Principal,Full-time,2028-03-31,
+P1014,E100002,Head of Vocational Education,Full-time,2027-06-30,P1011
+P1012,E100003,VET Trainer and Assessor,Full-time,2026-10-15,P1014
+P1013,E100004,Senior Trainer,Part-time,2026-11-28,P1014
+P1015,E100005,Trainer and Assessor,Casual,2029-09-30,P1014
+P1005,E100006,Workplace Learning Coordinator,Part-time,2027-02-14,P1011
+P1035,E100007,Trainer and Assessor,Full-time,2026-09-30,P1014
+P1036,E100008,Campus Coordinator,Full-time,2027-05-31,P1011
+P1037,E100009,Senior Trainer,Part-time,2026-12-05,P1014
+P1038,E100010,Trainer and Assessor,Casual,2028-01-31,P1014

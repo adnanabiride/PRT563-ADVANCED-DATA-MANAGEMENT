@@ -1,0 +1,17 @@
+student_person_id,guardian_person_id,relationship_type,is_primary_contact
+P1001,P1016,Mother,Y
+P1002,P1017,Father,Y
+P1003,P1018,Mother,Y
+P1004,P1019,Father,Y
+P1006,P1005,Mother,Y
+P1008,P1020,Father,Y
+P1009,P1018,Aunt,N
+P1007,P1019,Grandfather,Y
+P1028,P1039,Mother,Y
+P1029,P1040,Father,Y
+P1030,P1041,Mother,Y
+P1031,P1042,Father,Y
+P1032,P1035,Mother,Y
+P1023,P1016,Aunt,N
+P1025,P1018,Stepmother,N
+P1031,P1041,Aunt,N
