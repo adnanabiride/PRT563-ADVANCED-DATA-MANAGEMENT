@@ -1,0 +1,313 @@
+// =============================================================================
+// PRT563 Assessment 4 - Group 2 - SUPPLEMENTARY
+// BASELINE GRAPH MODEL (Model A): direct translation by the general rules
+//   table -> label, row -> node (subtype, dependent and multi-valued-attribute
+//   tables included), foreign key -> relationship, pure junction table ->
+//   relationship with properties. No multi-label nodes, no folding, no derived
+//   structures. Values are loaded as strings, exactly as a naive ETL would.
+// Used only for the modelling experiment in Section 4 of the report. Load it
+// into a SEPARATE, empty DBMS (Neo4j Desktop: Add > Local DBMS).
+// =============================================================================
+
+CREATE CONSTRAINT a_campus_key IF NOT EXISTS FOR (n:Campus) REQUIRE n.campus_code IS UNIQUE;
+CREATE CONSTRAINT a_term_key IF NOT EXISTS FOR (n:Term) REQUIRE n.term_code IS UNIQUE;
+CREATE CONSTRAINT a_program_key IF NOT EXISTS FOR (n:Program) REQUIRE n.program_code IS UNIQUE;
+CREATE CONSTRAINT a_subject_key IF NOT EXISTS FOR (n:Subject) REQUIRE n.subject_code IS UNIQUE;
+CREATE CONSTRAINT a_qcaasubject_key IF NOT EXISTS FOR (n:QCAASubject) REQUIRE n.subject_code IS UNIQUE;
+CREATE CONSTRAINT a_vetunit_key IF NOT EXISTS FOR (n:VETUnit) REQUIRE n.subject_code IS UNIQUE;
+CREATE CONSTRAINT a_hostemployer_key IF NOT EXISTS FOR (n:HostEmployer) REQUIRE n.employer_abn IS UNIQUE;
+CREATE CONSTRAINT a_billingaccount_key IF NOT EXISTS FOR (n:BillingAccount) REQUIRE n.account_no IS UNIQUE;
+CREATE CONSTRAINT a_placementagreement_key IF NOT EXISTS FOR (n:PlacementAgreement) REQUIRE n.agreement_id IS UNIQUE;
+CREATE CONSTRAINT a_person_key IF NOT EXISTS FOR (n:Person) REQUIRE n.person_id IS UNIQUE;
+CREATE CONSTRAINT a_phonenumber_key IF NOT EXISTS FOR (n:PhoneNumber) REQUIRE (n.person_id, n.phone_number) IS UNIQUE;
+CREATE CONSTRAINT a_student_key IF NOT EXISTS FOR (n:Student) REQUIRE n.person_id IS UNIQUE;
+CREATE CONSTRAINT a_staff_key IF NOT EXISTS FOR (n:Staff) REQUIRE n.person_id IS UNIQUE;
+CREATE CONSTRAINT a_guardian_key IF NOT EXISTS FOR (n:Guardian) REQUIRE n.person_id IS UNIQUE;
+CREATE CONSTRAINT a_courseoffering_key IF NOT EXISTS FOR (n:CourseOffering) REQUIRE (n.subject_code, n.campus_code, n.term_code) IS UNIQUE;
+CREATE CONSTRAINT a_enrolment_key IF NOT EXISTS FOR (n:Enrolment) REQUIRE (n.student_person_id, n.program_code) IS UNIQUE;
+CREATE CONSTRAINT a_qualification_key IF NOT EXISTS FOR (n:Qualification) REQUIRE n.qualification_id IS UNIQUE;
+CREATE CONSTRAINT a_placement_key IF NOT EXISTS FOR (n:Placement) REQUIRE (n.student_person_id, n.employer_abn, n.start_date) IS UNIQUE;
+CREATE CONSTRAINT a_invoice_key IF NOT EXISTS FOR (n:Invoice) REQUIRE n.invoice_no IS UNIQUE;
+CREATE CONSTRAINT a_invoiceline_key IF NOT EXISTS FOR (n:InvoiceLine) REQUIRE (n.invoice_no, n.line_no) IS UNIQUE;
+CREATE CONSTRAINT a_payment_key IF NOT EXISTS FOR (n:Payment) REQUIRE n.payment_id IS UNIQUE;
+CREATE CONSTRAINT a_subjectenrolment_key IF NOT EXISTS FOR (n:SubjectEnrolment) REQUIRE (n.student_person_id, n.subject_code, n.campus_code, n.term_code) IS UNIQUE;
+CREATE CONSTRAINT a_result_key IF NOT EXISTS FOR (n:Result) REQUIRE (n.student_person_id, n.subject_code, n.campus_code, n.term_code) IS UNIQUE;
+// relational UNIQUE constraints (natural keys), carried over one-to-one
+CREATE CONSTRAINT a_person_email IF NOT EXISTS FOR (n:Person) REQUIRE n.email IS UNIQUE;
+CREATE CONSTRAINT a_student_no IF NOT EXISTS FOR (n:Student) REQUIRE n.student_no IS UNIQUE;
+CREATE CONSTRAINT a_student_usi IF NOT EXISTS FOR (n:Student) REQUIRE n.usi IS UNIQUE;
+CREATE CONSTRAINT a_staff_no IF NOT EXISTS FOR (n:Staff) REQUIRE n.staff_no IS UNIQUE;
+CREATE CONSTRAINT a_campus_name IF NOT EXISTS FOR (n:Campus) REQUIRE n.campus_name IS UNIQUE;
+CREATE CONSTRAINT a_program_name IF NOT EXISTS FOR (n:Program) REQUIRE n.program_name IS UNIQUE;
+CREATE CONSTRAINT a_term_year_number IF NOT EXISTS FOR (n:Term) REQUIRE (n.academic_year, n.term_number) IS UNIQUE;
+CREATE CONSTRAINT a_subject_title IF NOT EXISTS FOR (n:Subject) REQUIRE n.subject_title IS UNIQUE;
+CREATE CONSTRAINT a_vet_uoc IF NOT EXISTS FOR (n:VETUnit) REQUIRE n.uoc_code IS UNIQUE;
+CREATE CONSTRAINT a_qual_cert IF NOT EXISTS FOR (n:Qualification) REQUIRE n.certificate_no IS UNIQUE;
+CREATE CONSTRAINT a_qual_enrolment IF NOT EXISTS FOR (n:Qualification) REQUIRE (n.student_person_id, n.program_code) IS UNIQUE;
+CREATE CONSTRAINT a_employer_name IF NOT EXISTS FOR (n:HostEmployer) REQUIRE n.employer_name IS UNIQUE;
+CREATE CONSTRAINT a_policy_no IF NOT EXISTS FOR (n:PlacementAgreement) REQUIRE n.insurance_policy_no IS UNIQUE;
+CALL db.awaitIndexes(300);
+
+// ---- nodes: one per row of every table ------------------------------------
+LOAD CSV WITH HEADERS FROM 'file:///campus.csv' AS row
+MERGE (n:Campus {campus_code: row.campus_code})
+SET n.campus_name = CASE WHEN row.campus_name <> '' THEN row.campus_name END,
+    n.suburb = CASE WHEN row.suburb <> '' THEN row.suburb END,
+    n.state = CASE WHEN row.state <> '' THEN row.state END,
+    n.postcode = CASE WHEN row.postcode <> '' THEN row.postcode END,
+    n.opened_date = CASE WHEN row.opened_date <> '' THEN row.opened_date END;
+
+LOAD CSV WITH HEADERS FROM 'file:///term.csv' AS row
+MERGE (n:Term {term_code: row.term_code})
+SET n.academic_year = CASE WHEN row.academic_year <> '' THEN row.academic_year END,
+    n.term_number = CASE WHEN row.term_number <> '' THEN row.term_number END,
+    n.start_date = CASE WHEN row.start_date <> '' THEN row.start_date END,
+    n.end_date = CASE WHEN row.end_date <> '' THEN row.end_date END;
+
+LOAD CSV WITH HEADERS FROM 'file:///program.csv' AS row
+MERGE (n:Program {program_code: row.program_code})
+SET n.program_name = CASE WHEN row.program_name <> '' THEN row.program_name END,
+    n.aqf_level = CASE WHEN row.aqf_level <> '' THEN row.aqf_level END,
+    n.duration_terms = CASE WHEN row.duration_terms <> '' THEN row.duration_terms END;
+
+LOAD CSV WITH HEADERS FROM 'file:///subject.csv' AS row
+MERGE (n:Subject {subject_code: row.subject_code})
+SET n.subject_title = CASE WHEN row.subject_title <> '' THEN row.subject_title END,
+    n.nominal_hours = CASE WHEN row.nominal_hours <> '' THEN row.nominal_hours END,
+    n.subject_kind = CASE WHEN row.subject_kind <> '' THEN row.subject_kind END;
+
+LOAD CSV WITH HEADERS FROM 'file:///qcaa_subject.csv' AS row
+MERGE (n:QCAASubject {subject_code: row.subject_code})
+SET n.syllabus_year = CASE WHEN row.syllabus_year <> '' THEN row.syllabus_year END,
+    n.subject_category = CASE WHEN row.subject_category <> '' THEN row.subject_category END;
+
+LOAD CSV WITH HEADERS FROM 'file:///vet_unit.csv' AS row
+MERGE (n:VETUnit {subject_code: row.subject_code})
+SET n.uoc_code = CASE WHEN row.uoc_code <> '' THEN row.uoc_code END,
+    n.training_package_code = CASE WHEN row.training_package_code <> '' THEN row.training_package_code END;
+
+LOAD CSV WITH HEADERS FROM 'file:///host_employer.csv' AS row
+MERGE (n:HostEmployer {employer_abn: row.employer_abn})
+SET n.employer_name = CASE WHEN row.employer_name <> '' THEN row.employer_name END,
+    n.industry_sector = CASE WHEN row.industry_sector <> '' THEN row.industry_sector END,
+    n.contact_email = CASE WHEN row.contact_email <> '' THEN row.contact_email END;
+
+LOAD CSV WITH HEADERS FROM 'file:///billing_account.csv' AS row
+MERGE (n:BillingAccount {account_no: row.account_no})
+SET n.account_opened = CASE WHEN row.account_opened <> '' THEN row.account_opened END,
+    n.account_status = CASE WHEN row.account_status <> '' THEN row.account_status END;
+
+LOAD CSV WITH HEADERS FROM 'file:///placement_agreement.csv' AS row
+MERGE (n:PlacementAgreement {agreement_id: row.agreement_id})
+SET n.signed_date = CASE WHEN row.signed_date <> '' THEN row.signed_date END,
+    n.expiry_date = CASE WHEN row.expiry_date <> '' THEN row.expiry_date END,
+    n.insurance_policy_no = CASE WHEN row.insurance_policy_no <> '' THEN row.insurance_policy_no END;
+
+LOAD CSV WITH HEADERS FROM 'file:///person.csv' AS row
+MERGE (n:Person {person_id: row.person_id})
+SET n.given_name = CASE WHEN row.given_name <> '' THEN row.given_name END,
+    n.family_name = CASE WHEN row.family_name <> '' THEN row.family_name END,
+    n.date_of_birth = CASE WHEN row.date_of_birth <> '' THEN row.date_of_birth END,
+    n.email = CASE WHEN row.email <> '' THEN row.email END,
+    n.street_address = CASE WHEN row.street_address <> '' THEN row.street_address END,
+    n.suburb = CASE WHEN row.suburb <> '' THEN row.suburb END,
+    n.state = CASE WHEN row.state <> '' THEN row.state END,
+    n.postcode = CASE WHEN row.postcode <> '' THEN row.postcode END,
+    n.preferred_name = CASE WHEN row.preferred_name <> '' THEN row.preferred_name END;
+
+LOAD CSV WITH HEADERS FROM 'file:///person_phone.csv' AS row
+MERGE (n:PhoneNumber {person_id: row.person_id, phone_number: row.phone_number})
+SET n.phone_type = CASE WHEN row.phone_type <> '' THEN row.phone_type END;
+
+LOAD CSV WITH HEADERS FROM 'file:///student.csv' AS row
+MERGE (n:Student {person_id: row.person_id})
+SET n.student_no = CASE WHEN row.student_no <> '' THEN row.student_no END,
+    n.usi = CASE WHEN row.usi <> '' THEN row.usi END,
+    n.year_level = CASE WHEN row.year_level <> '' THEN row.year_level END,
+    n.commenced_date = CASE WHEN row.commenced_date <> '' THEN row.commenced_date END;
+
+LOAD CSV WITH HEADERS FROM 'file:///staff.csv' AS row
+MERGE (n:Staff {person_id: row.person_id})
+SET n.staff_no = CASE WHEN row.staff_no <> '' THEN row.staff_no END,
+    n.position_title = CASE WHEN row.position_title <> '' THEN row.position_title END,
+    n.employment_type = CASE WHEN row.employment_type <> '' THEN row.employment_type END,
+    n.blue_card_expiry = CASE WHEN row.blue_card_expiry <> '' THEN row.blue_card_expiry END;
+
+LOAD CSV WITH HEADERS FROM 'file:///guardian.csv' AS row
+MERGE (n:Guardian {person_id: row.person_id})
+SET n.preferred_contact = CASE WHEN row.preferred_contact <> '' THEN row.preferred_contact END;
+
+LOAD CSV WITH HEADERS FROM 'file:///course_offering.csv' AS row
+MERGE (n:CourseOffering {subject_code: row.subject_code, campus_code: row.campus_code, term_code: row.term_code})
+SET n.delivery_mode = CASE WHEN row.delivery_mode <> '' THEN row.delivery_mode END,
+    n.max_capacity = CASE WHEN row.max_capacity <> '' THEN row.max_capacity END;
+
+LOAD CSV WITH HEADERS FROM 'file:///enrolment.csv' AS row
+MERGE (n:Enrolment {student_person_id: row.student_person_id, program_code: row.program_code})
+SET n.campus_code = CASE WHEN row.campus_code <> '' THEN row.campus_code END,
+    n.enrolment_date = CASE WHEN row.enrolment_date <> '' THEN row.enrolment_date END,
+    n.enrolment_status = CASE WHEN row.enrolment_status <> '' THEN row.enrolment_status END,
+    n.funding_source = CASE WHEN row.funding_source <> '' THEN row.funding_source END;
+
+LOAD CSV WITH HEADERS FROM 'file:///qualification.csv' AS row
+MERGE (n:Qualification {qualification_id: row.qualification_id})
+SET n.student_person_id = CASE WHEN row.student_person_id <> '' THEN row.student_person_id END,
+    n.program_code = CASE WHEN row.program_code <> '' THEN row.program_code END,
+    n.qualification_name = CASE WHEN row.qualification_name <> '' THEN row.qualification_name END,
+    n.certificate_no = CASE WHEN row.certificate_no <> '' THEN row.certificate_no END,
+    n.awarded_date = CASE WHEN row.awarded_date <> '' THEN row.awarded_date END;
+
+LOAD CSV WITH HEADERS FROM 'file:///placement.csv' AS row
+MERGE (n:Placement {student_person_id: row.student_person_id, employer_abn: row.employer_abn, start_date: row.start_date})
+SET n.end_date = CASE WHEN row.end_date <> '' THEN row.end_date END,
+    n.hours_per_week = CASE WHEN row.hours_per_week <> '' THEN row.hours_per_week END;
+
+LOAD CSV WITH HEADERS FROM 'file:///invoice.csv' AS row
+MERGE (n:Invoice {invoice_no: row.invoice_no})
+SET n.student_person_id = CASE WHEN row.student_person_id <> '' THEN row.student_person_id END,
+    n.term_code = CASE WHEN row.term_code <> '' THEN row.term_code END,
+    n.issue_date = CASE WHEN row.issue_date <> '' THEN row.issue_date END,
+    n.due_date = CASE WHEN row.due_date <> '' THEN row.due_date END,
+    n.invoice_status = CASE WHEN row.invoice_status <> '' THEN row.invoice_status END;
+
+LOAD CSV WITH HEADERS FROM 'file:///invoice_line.csv' AS row
+MERGE (n:InvoiceLine {invoice_no: row.invoice_no, line_no: row.line_no})
+SET n.description = CASE WHEN row.description <> '' THEN row.description END,
+    n.line_amount = CASE WHEN row.line_amount <> '' THEN row.line_amount END;
+
+LOAD CSV WITH HEADERS FROM 'file:///payment.csv' AS row
+MERGE (n:Payment {payment_id: row.payment_id})
+SET n.invoice_no = CASE WHEN row.invoice_no <> '' THEN row.invoice_no END,
+    n.paid_date = CASE WHEN row.paid_date <> '' THEN row.paid_date END,
+    n.amount_paid = CASE WHEN row.amount_paid <> '' THEN row.amount_paid END,
+    n.payment_method = CASE WHEN row.payment_method <> '' THEN row.payment_method END;
+
+LOAD CSV WITH HEADERS FROM 'file:///subject_enrolment.csv' AS row
+MERGE (n:SubjectEnrolment {student_person_id: row.student_person_id, subject_code: row.subject_code, campus_code: row.campus_code, term_code: row.term_code})
+SET n.enrolled_on = CASE WHEN row.enrolled_on <> '' THEN row.enrolled_on END,
+    n.se_status = CASE WHEN row.se_status <> '' THEN row.se_status END;
+
+LOAD CSV WITH HEADERS FROM 'file:///result.csv' AS row
+MERGE (n:Result {student_person_id: row.student_person_id, subject_code: row.subject_code, campus_code: row.campus_code, term_code: row.term_code})
+SET n.result_type = CASE WHEN row.result_type <> '' THEN row.result_type END,
+    n.grade_letter = CASE WHEN row.grade_letter <> '' THEN row.grade_letter END,
+    n.competency_outcome = CASE WHEN row.competency_outcome <> '' THEN row.competency_outcome END,
+    n.awarded_date = CASE WHEN row.awarded_date <> '' THEN row.awarded_date END;
+
+// ---- specialisation as IS_A hops -----------------------------------------
+LOAD CSV WITH HEADERS FROM 'file:///student.csv' AS row
+MATCH (a:Student {person_id: row.person_id}), (b:Person {person_id: row.person_id})
+MERGE (a)-[:IS_A]->(b);
+
+LOAD CSV WITH HEADERS FROM 'file:///staff.csv' AS row
+MATCH (a:Staff {person_id: row.person_id}), (b:Person {person_id: row.person_id})
+MERGE (a)-[:IS_A]->(b);
+
+LOAD CSV WITH HEADERS FROM 'file:///guardian.csv' AS row
+MATCH (a:Guardian {person_id: row.person_id}), (b:Person {person_id: row.person_id})
+MERGE (a)-[:IS_A]->(b);
+
+LOAD CSV WITH HEADERS FROM 'file:///qcaa_subject.csv' AS row
+MATCH (a:QCAASubject {subject_code: row.subject_code}), (b:Subject {subject_code: row.subject_code})
+MERGE (a)-[:IS_A]->(b);
+
+LOAD CSV WITH HEADERS FROM 'file:///vet_unit.csv' AS row
+MATCH (a:VETUnit {subject_code: row.subject_code}), (b:Subject {subject_code: row.subject_code})
+MERGE (a)-[:IS_A]->(b);
+
+// ---- foreign keys and junction tables ------------------------------------
+LOAD CSV WITH HEADERS FROM 'file:///person_phone.csv' AS row
+MATCH (p:Person {person_id: row.person_id}), (ph:PhoneNumber {person_id: row.person_id, phone_number: row.phone_number})
+MERGE (p)-[:HAS_PHONE]->(ph);
+
+LOAD CSV WITH HEADERS FROM 'file:///guardianship.csv' AS row
+MATCH (g:Guardian {person_id: row.guardian_person_id}), (s:Student {person_id: row.student_person_id})
+MERGE (g)-[r:GUARDIAN_OF]->(s)
+SET r.relationship_type = row.relationship_type, r.is_primary_contact = row.is_primary_contact;
+
+LOAD CSV WITH HEADERS FROM 'file:///staff.csv' AS row
+WITH row WHERE row.supervisor_person_id <> ''
+MATCH (b:Staff {person_id: row.supervisor_person_id}), (s:Staff {person_id: row.person_id})
+MERGE (b)-[:SUPERVISES]->(s);
+
+LOAD CSV WITH HEADERS FROM 'file:///program_subject.csv' AS row
+MATCH (p:Program {program_code: row.program_code}), (s:Subject {subject_code: row.subject_code})
+MERGE (p)-[r:INCLUDES]->(s)
+SET r.is_core = row.is_core, r.sequence_no = row.sequence_no;
+
+LOAD CSV WITH HEADERS FROM 'file:///subject_prerequisite.csv' AS row
+MATCH (s:Subject {subject_code: row.subject_code}), (pre:Subject {subject_code: row.prerequisite_code})
+MERGE (s)-[:REQUIRES]->(pre);
+
+LOAD CSV WITH HEADERS FROM 'file:///course_offering.csv' AS row
+MATCH (o:CourseOffering {subject_code: row.subject_code, campus_code: row.campus_code, term_code: row.term_code})
+MATCH (s:Subject {subject_code: row.subject_code}), (c:Campus {campus_code: row.campus_code}),
+      (t:Term {term_code: row.term_code}), (st:Staff {person_id: row.lead_staff_id})
+MERGE (o)-[:OF_SUBJECT]->(s)
+MERGE (o)-[:AT_CAMPUS]->(c)
+MERGE (o)-[:IN_TERM]->(t)
+MERGE (st)-[:LEADS]->(o);
+
+LOAD CSV WITH HEADERS FROM 'file:///subject_enrolment.csv' AS row
+MATCH (se:SubjectEnrolment {student_person_id: row.student_person_id, subject_code: row.subject_code, campus_code: row.campus_code, term_code: row.term_code})
+MATCH (s:Student {person_id: row.student_person_id})
+MATCH (o:CourseOffering {subject_code: row.subject_code, campus_code: row.campus_code, term_code: row.term_code})
+MERGE (s)-[:HAS_SUBJECT_ENROLMENT]->(se)
+MERGE (se)-[:FOR_OFFERING]->(o);
+
+LOAD CSV WITH HEADERS FROM 'file:///result.csv' AS row
+MATCH (se:SubjectEnrolment {student_person_id: row.student_person_id, subject_code: row.subject_code, campus_code: row.campus_code, term_code: row.term_code})
+MATCH (r:Result {student_person_id: row.student_person_id, subject_code: row.subject_code, campus_code: row.campus_code, term_code: row.term_code})
+MERGE (se)-[:HAS_RESULT]->(r);
+
+LOAD CSV WITH HEADERS FROM 'file:///enrolment.csv' AS row
+MATCH (e:Enrolment {student_person_id: row.student_person_id, program_code: row.program_code})
+MATCH (s:Student {person_id: row.student_person_id}), (p:Program {program_code: row.program_code}), (c:Campus {campus_code: row.campus_code})
+MERGE (s)-[:HAS_ENROLMENT]->(e)
+MERGE (e)-[:IN_PROGRAM]->(p)
+MERGE (e)-[:AT_CAMPUS]->(c);
+
+LOAD CSV WITH HEADERS FROM 'file:///qualification.csv' AS row
+MATCH (e:Enrolment {student_person_id: row.student_person_id, program_code: row.program_code}), (q:Qualification {qualification_id: row.qualification_id})
+MERGE (e)-[:AWARDED]->(q);
+
+LOAD CSV WITH HEADERS FROM 'file:///placement.csv' AS row
+MATCH (pl:Placement {student_person_id: row.student_person_id, employer_abn: row.employer_abn, start_date: row.start_date})
+MATCH (s:Student {person_id: row.student_person_id}), (e:HostEmployer {employer_abn: row.employer_abn}), (a:PlacementAgreement {agreement_id: row.agreement_id})
+MERGE (s)-[:UNDERTAKES]->(pl)
+MERGE (pl)-[:HOSTED_BY]->(e)
+MERGE (pl)-[:GOVERNED_BY]->(a);
+
+LOAD CSV WITH HEADERS FROM 'file:///student.csv' AS row
+WITH row WHERE row.account_no <> ''
+MATCH (s:Student {person_id: row.person_id}), (b:BillingAccount {account_no: row.account_no})
+MERGE (s)-[:HOLDS_ACCOUNT]->(b);
+
+LOAD CSV WITH HEADERS FROM 'file:///guardian.csv' AS row
+WITH row WHERE row.account_no <> ''
+MATCH (g:Guardian {person_id: row.person_id}), (b:BillingAccount {account_no: row.account_no})
+MERGE (g)-[:HOLDS_ACCOUNT]->(b);
+
+LOAD CSV WITH HEADERS FROM 'file:///host_employer.csv' AS row
+WITH row WHERE row.account_no <> ''
+MATCH (e:HostEmployer {employer_abn: row.employer_abn}), (b:BillingAccount {account_no: row.account_no})
+MERGE (e)-[:HOLDS_ACCOUNT]->(b);
+
+LOAD CSV WITH HEADERS FROM 'file:///invoice.csv' AS row
+MATCH (i:Invoice {invoice_no: row.invoice_no}), (b:BillingAccount {account_no: row.account_no}),
+      (s:Student {person_id: row.student_person_id}), (t:Term {term_code: row.term_code})
+MERGE (i)-[:BILLED_TO]->(b)
+MERGE (i)-[:RAISED_FOR]->(s)
+MERGE (i)-[:FOR_TERM]->(t);
+
+LOAD CSV WITH HEADERS FROM 'file:///invoice_line.csv' AS row
+MATCH (i:Invoice {invoice_no: row.invoice_no}), (l:InvoiceLine {invoice_no: row.invoice_no, line_no: row.line_no})
+MERGE (i)-[:HAS_LINE]->(l);
+
+LOAD CSV WITH HEADERS FROM 'file:///payment.csv' AS row
+MATCH (p:Payment {payment_id: row.payment_id}), (i:Invoice {invoice_no: row.invoice_no})
+MERGE (p)-[:SETTLES]->(i);
+
+// Expected after load: 569 nodes, 876 relationships.
+MATCH (n) RETURN count(n) AS nodes;
+MATCH ()-[r]->() RETURN count(r) AS relationships;

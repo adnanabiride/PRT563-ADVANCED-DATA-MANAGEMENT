@@ -1,0 +1,356 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800px" height="1620px" viewBox="0 0 1800 1620" font-family="Liberation Sans, Arial, Helvetica, sans-serif"><rect width="1800" height="1620" fill="white"/><rect x="810" y="70" width="174" height="228" fill="white" stroke="#2E5A87" stroke-width="1.5"/>
+<rect x="810" y="70" width="174" height="24" fill="#DCE6F2" stroke="#2E5A87" stroke-width="1.5"/>
+<text x="897.0" y="87" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">Person</text>
+<text x="818" y="109" font-size="12" fill="#1d2329">- personId: Integer {frozen}</text>
+<text x="818" y="125" font-size="12" fill="#1d2329">- givenName: String</text>
+<text x="818" y="141" font-size="12" fill="#1d2329">- familyName: String</text>
+<text x="818" y="157" font-size="12" fill="#1d2329">- preferredName: String [0..1]</text>
+<text x="818" y="173" font-size="12" fill="#1d2329">- dateOfBirth: Date {frozen}</text>
+<text x="818" y="189" font-size="12" fill="#1d2329">- email: String</text>
+<text x="818" y="205" font-size="12" fill="#1d2329">- address: AddressDomain</text>
+<text x="818" y="221" font-size="12" fill="#1d2329">- phoneNumber: String [0..*]</text>
+<text x="818" y="237" font-size="12" fill="#1d2329">- /age: Integer</text>
+<line x1="810" y1="244" x2="984" y2="244" stroke="#2E5A87" stroke-width="1"/>
+<text x="818" y="259" font-size="12" fill="#1d2329">+ calculateAge(): Integer</text>
+<text x="818" y="275" font-size="12" fill="#1d2329">+ getPersonId(): Integer</text>
+<text x="818" y="291" font-size="12" fill="#1d2329">...</text>
+<rect x="380" y="380" width="182" height="68" fill="white" stroke="#2E5A87" stroke-width="1.5"/>
+<rect x="380" y="380" width="182" height="24" fill="#DCE6F2" stroke="#2E5A87" stroke-width="1.5"/>
+<text x="471.0" y="397" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">Guardian</text>
+<text x="388" y="419" font-size="12" fill="#1d2329">- preferredContact: String</text>
+<line x1="380" y1="426" x2="562" y2="426" stroke="#2E5A87" stroke-width="1"/>
+<text x="388" y="441" font-size="12" fill="#1d2329">+ getPreferredContact(): String</text>
+<rect x="800" y="380" width="194" height="132" fill="white" stroke="#2E5A87" stroke-width="1.5"/>
+<rect x="800" y="380" width="194" height="24" fill="#DCE6F2" stroke="#2E5A87" stroke-width="1.5"/>
+<text x="897.0" y="397" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">Student</text>
+<text x="808" y="419" font-size="12" fill="#1d2329">- studentNo: String {frozen}</text>
+<text x="808" y="435" font-size="12" fill="#1d2329">- usi: String {frozen}</text>
+<text x="808" y="451" font-size="12" fill="#1d2329">- yearLevel: Integer</text>
+<text x="808" y="467" font-size="12" fill="#1d2329">- commencedDate: Date</text>
+<line x1="800" y1="474" x2="994" y2="474" stroke="#2E5A87" stroke-width="1"/>
+<text x="808" y="489" font-size="12" fill="#1d2329">+ isMinor(): Boolean</text>
+<text x="808" y="505" font-size="12" fill="#1d2329">+ countCompletedUnits(): Integer</text>
+<rect x="1300" y="380" width="216" height="116" fill="white" stroke="#2E5A87" stroke-width="1.5"/>
+<rect x="1300" y="380" width="216" height="24" fill="#DCE6F2" stroke="#2E5A87" stroke-width="1.5"/>
+<text x="1408.0" y="397" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">Staff</text>
+<text x="1308" y="419" font-size="12" fill="#1d2329">- staffNo: String {frozen}</text>
+<text x="1308" y="435" font-size="12" fill="#1d2329">- positionTitle: String</text>
+<text x="1308" y="451" font-size="12" fill="#1d2329">- employmentType: String</text>
+<text x="1308" y="467" font-size="12" fill="#1d2329">- blueCardExpiry: Date</text>
+<line x1="1300" y1="474" x2="1516" y2="474" stroke="#2E5A87" stroke-width="1"/>
+<text x="1308" y="489" font-size="12" fill="#1d2329">+ isBlueCardValid(on: Date): Boolean</text>
+<rect x="590" y="468" width="182" height="84" fill="white" stroke="#2E5A87" stroke-width="1.5"/>
+<rect x="590" y="468" width="182" height="24" fill="#DCE6F2" stroke="#2E5A87" stroke-width="1.5"/>
+<text x="681.0" y="485" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">Guardianship</text>
+<text x="598" y="507" font-size="12" fill="#1d2329">- relationshipType: String</text>
+<text x="598" y="523" font-size="12" fill="#1d2329">- isPrimaryContact: Boolean</text>
+<line x1="590" y1="530" x2="772" y2="530" stroke="#2E5A87" stroke-width="1"/>
+<text x="598" y="545" font-size="12" fill="#1d2329">+ getRelationshipType(): String</text>
+<rect x="40" y="580" width="138" height="84" fill="white" stroke="#8E3B46" stroke-width="1.5"/>
+<rect x="40" y="580" width="138" height="38" fill="#F2DDE0" stroke="#8E3B46" stroke-width="1.5"/>
+<text x="109.0" y="597" font-size="11" fill="#1d2329" text-anchor="middle">«interface»</text>
+<text x="109.0" y="611" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">AccountHolder</text>
+<line x1="40" y1="626" x2="178" y2="626" stroke="#8E3B46" stroke-width="1"/>
+<text x="48" y="641" font-size="12" fill="#1d2329">+ holderName(): String</text>
+<text x="48" y="657" font-size="12" fill="#1d2329">+ billingEmail(): String</text>
+<rect x="40" y="740" width="164" height="100" fill="white" stroke="#8E3B46" stroke-width="1.5"/>
+<rect x="40" y="740" width="164" height="24" fill="#F2DDE0" stroke="#8E3B46" stroke-width="1.5"/>
+<text x="122.0" y="757" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">BillingAccount</text>
+<text x="48" y="779" font-size="12" fill="#1d2329">- accountNo: String {frozen}</text>
+<text x="48" y="795" font-size="12" fill="#1d2329">- accountOpened: Date</text>
+<text x="48" y="811" font-size="12" fill="#1d2329">- accountStatus: String</text>
+<line x1="40" y1="818" x2="204" y2="818" stroke="#8E3B46" stroke-width="1"/>
+<text x="48" y="833" font-size="12" fill="#1d2329">+ isActive(): Boolean</text>
+<rect x="320" y="700" width="186" height="148" fill="white" stroke="#8E3B46" stroke-width="1.5"/>
+<rect x="320" y="700" width="186" height="24" fill="#F2DDE0" stroke="#8E3B46" stroke-width="1.5"/>
+<text x="413.0" y="717" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">Invoice</text>
+<text x="328" y="739" font-size="12" fill="#1d2329">- invoiceNo: String {frozen}</text>
+<text x="328" y="755" font-size="12" fill="#1d2329">- issueDate: Date</text>
+<text x="328" y="771" font-size="12" fill="#1d2329">- dueDate: Date</text>
+<text x="328" y="787" font-size="12" fill="#1d2329">- invoiceStatus: String</text>
+<text x="328" y="803" font-size="12" fill="#1d2329">- /totalAmount: Decimal</text>
+<line x1="320" y1="810" x2="506" y2="810" stroke="#8E3B46" stroke-width="1"/>
+<text x="328" y="825" font-size="12" fill="#1d2329">+ calculateBalance(): Decimal</text>
+<text x="328" y="841" font-size="12" fill="#1d2329">+ isOverdue(on: Date): Boolean</text>
+<rect x="307" y="950" width="166" height="84" fill="white" stroke="#8E3B46" stroke-width="1.5"/>
+<rect x="307" y="950" width="166" height="24" fill="#F2DDE0" stroke="#8E3B46" stroke-width="1.5"/>
+<text x="390.0" y="967" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">InvoiceLine</text>
+<text x="315" y="989" font-size="12" fill="#1d2329">- description: String</text>
+<text x="315" y="1005" font-size="12" fill="#1d2329">- lineAmount: Decimal</text>
+<line x1="307" y1="1012" x2="473" y2="1012" stroke="#8E3B46" stroke-width="1"/>
+<text x="315" y="1027" font-size="12" fill="#1d2329">+ getLineAmount(): Decimal</text>
+<rect x="540" y="950" width="168" height="116" fill="white" stroke="#8E3B46" stroke-width="1.5"/>
+<rect x="540" y="950" width="168" height="24" fill="#F2DDE0" stroke="#8E3B46" stroke-width="1.5"/>
+<text x="624.0" y="967" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">Payment</text>
+<text x="548" y="989" font-size="12" fill="#1d2329">- paymentId: String {frozen}</text>
+<text x="548" y="1005" font-size="12" fill="#1d2329">- paidDate: Date</text>
+<text x="548" y="1021" font-size="12" fill="#1d2329">- amountPaid: Decimal</text>
+<text x="548" y="1037" font-size="12" fill="#1d2329">- paymentMethod: String</text>
+<line x1="540" y1="1044" x2="708" y2="1044" stroke="#8E3B46" stroke-width="1"/>
+<text x="548" y="1059" font-size="12" fill="#1d2329">+ getAmountPaid(): Decimal</text>
+<rect x="320" y="1170" width="178" height="102" fill="white" stroke="#B26A1B" stroke-width="1.5"/>
+<rect x="320" y="1170" width="178" height="24" fill="#F6E6D3" stroke="#B26A1B" stroke-width="1.5"/>
+<text x="409.0" y="1187" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">HostEmployer</text>
+<text x="328" y="1209" font-size="12" fill="#1d2329">- employerAbn: String {frozen}</text>
+<text x="328" y="1225" font-size="12" fill="#1d2329">- employerName: String</text>
+<text x="328" y="1241" font-size="12" fill="#1d2329">- industrySector: String</text>
+<text x="328" y="1257" font-size="12" fill="#1d2329">- contactEmail: String</text>
+<line x1="320" y1="1264" x2="498" y2="1264" stroke="#B26A1B" stroke-width="1"/>
+<rect x="607" y="1272" width="186" height="100" fill="white" stroke="#B26A1B" stroke-width="1.5"/>
+<rect x="607" y="1272" width="186" height="24" fill="#F6E6D3" stroke="#B26A1B" stroke-width="1.5"/>
+<text x="700.0" y="1289" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">Placement</text>
+<text x="615" y="1311" font-size="12" fill="#1d2329">- startDate: Date</text>
+<text x="615" y="1327" font-size="12" fill="#1d2329">- endDate: Date [0..1]</text>
+<text x="615" y="1343" font-size="12" fill="#1d2329">- hoursPerWeek: Integer</text>
+<line x1="607" y1="1350" x2="793" y2="1350" stroke="#B26A1B" stroke-width="1"/>
+<text x="615" y="1365" font-size="12" fill="#1d2329">+ isCovered(on: Date): Boolean</text>
+<rect x="300" y="1400" width="174" height="116" fill="white" stroke="#B26A1B" stroke-width="1.5"/>
+<rect x="300" y="1400" width="174" height="24" fill="#F6E6D3" stroke="#B26A1B" stroke-width="1.5"/>
+<text x="387.0" y="1417" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">PlacementAgreement</text>
+<text x="308" y="1439" font-size="12" fill="#1d2329">- agreementId: String {frozen}</text>
+<text x="308" y="1455" font-size="12" fill="#1d2329">- signedDate: Date</text>
+<text x="308" y="1471" font-size="12" fill="#1d2329">- expiryDate: Date</text>
+<text x="308" y="1487" font-size="12" fill="#1d2329">- insurancePolicyNo: String</text>
+<line x1="300" y1="1494" x2="474" y2="1494" stroke="#B26A1B" stroke-width="1"/>
+<text x="308" y="1509" font-size="12" fill="#1d2329">+ isValid(on: Date): Boolean</text>
+<rect x="870" y="1330" width="180" height="116" fill="white" stroke="#2F7D4F" stroke-width="1.5"/>
+<rect x="870" y="1330" width="180" height="24" fill="#DCEFE3" stroke="#2F7D4F" stroke-width="1.5"/>
+<text x="960.0" y="1347" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">Program</text>
+<text x="878" y="1369" font-size="12" fill="#1d2329">- programCode: String {frozen}</text>
+<text x="878" y="1385" font-size="12" fill="#1d2329">- programName: String</text>
+<text x="878" y="1401" font-size="12" fill="#1d2329">- aqfLevel: Integer</text>
+<text x="878" y="1417" font-size="12" fill="#1d2329">- durationTerms: Integer</text>
+<line x1="870" y1="1424" x2="1050" y2="1424" stroke="#2F7D4F" stroke-width="1"/>
+<text x="878" y="1439" font-size="12" fill="#1d2329">+ coreSubjects(): Subject [*]</text>
+<rect x="1160" y="1440" width="136" height="70" fill="white" stroke="#2F7D4F" stroke-width="1.5"/>
+<rect x="1160" y="1440" width="136" height="24" fill="#DCEFE3" stroke="#2F7D4F" stroke-width="1.5"/>
+<text x="1228.0" y="1457" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">ProgramSubject</text>
+<text x="1168" y="1479" font-size="12" fill="#1d2329">- isCore: Boolean</text>
+<text x="1168" y="1495" font-size="12" fill="#1d2329">- sequenceNo: Integer</text>
+<line x1="1160" y1="1502" x2="1296" y2="1502" stroke="#2F7D4F" stroke-width="1"/>
+<rect x="1040" y="530" width="146" height="84" fill="white" stroke="#2F7D4F" stroke-width="1.5"/>
+<rect x="1040" y="530" width="146" height="24" fill="#DCEFE3" stroke="#2F7D4F" stroke-width="1.5"/>
+<text x="1113.0" y="547" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">SubjectEnrolment</text>
+<text x="1048" y="569" font-size="12" fill="#1d2329">- enrolledOn: Date</text>
+<text x="1048" y="585" font-size="12" fill="#1d2329">- status: String</text>
+<line x1="1040" y1="592" x2="1186" y2="592" stroke="#2F7D4F" stroke-width="1"/>
+<text x="1048" y="607" font-size="12" fill="#1d2329">+ isComplete(): Boolean</text>
+<rect x="1024" y="680" width="206" height="116" fill="white" stroke="#2F7D4F" stroke-width="1.5"/>
+<rect x="1024" y="680" width="206" height="24" fill="#DCEFE3" stroke="#2F7D4F" stroke-width="1.5"/>
+<text x="1127.0" y="697" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">Result</text>
+<text x="1032" y="719" font-size="12" fill="#1d2329">- resultType: String</text>
+<text x="1032" y="735" font-size="12" fill="#1d2329">- gradeLetter: String [0..1]</text>
+<text x="1032" y="751" font-size="12" fill="#1d2329">- competencyOutcome: String [0..1]</text>
+<text x="1032" y="767" font-size="12" fill="#1d2329">- awardedDate: Date</text>
+<line x1="1024" y1="774" x2="1230" y2="774" stroke="#2F7D4F" stroke-width="1"/>
+<text x="1032" y="789" font-size="12" fill="#1d2329">+ isPass(): Boolean</text>
+<rect x="996" y="850" width="238" height="84" fill="white" stroke="#5E4B8B" stroke-width="1.5"/>
+<rect x="996" y="850" width="238" height="24" fill="#E9E4F3" stroke="#5E4B8B" stroke-width="1.5"/>
+<text x="1115.0" y="867" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">ComplianceReporter</text>
+<text x="1004" y="889" font-size="12" fill="#1d2329">- reportPeriod: String</text>
+<line x1="996" y1="896" x2="1234" y2="896" stroke="#5E4B8B" stroke-width="1"/>
+<text x="1004" y="911" font-size="12" fill="#1d2329">+ generateQCAAExtract(term: Term): File</text>
+<text x="1004" y="927" font-size="12" fill="#1d2329">+ generateASQAExtract(term: Term): File</text>
+<rect x="1040" y="1000" width="150" height="100" fill="white" stroke="#2F7D4F" stroke-width="1.5"/>
+<rect x="1040" y="1000" width="150" height="24" fill="#DCEFE3" stroke="#2F7D4F" stroke-width="1.5"/>
+<text x="1115.0" y="1017" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">Enrolment</text>
+<text x="1048" y="1039" font-size="12" fill="#1d2329">- enrolmentDate: Date</text>
+<text x="1048" y="1055" font-size="12" fill="#1d2329">- enrolmentStatus: String</text>
+<text x="1048" y="1071" font-size="12" fill="#1d2329">- fundingSource: String</text>
+<line x1="1040" y1="1078" x2="1190" y2="1078" stroke="#2F7D4F" stroke-width="1"/>
+<text x="1048" y="1093" font-size="12" fill="#1d2329">+ isActive(): Boolean</text>
+<rect x="1040" y="1160" width="180" height="102" fill="white" stroke="#2F7D4F" stroke-width="1.5"/>
+<rect x="1040" y="1160" width="180" height="24" fill="#DCEFE3" stroke="#2F7D4F" stroke-width="1.5"/>
+<text x="1130.0" y="1177" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">Qualification</text>
+<text x="1048" y="1199" font-size="12" fill="#1d2329">- qualificationId: String {frozen}</text>
+<text x="1048" y="1215" font-size="12" fill="#1d2329">- qualificationName: String</text>
+<text x="1048" y="1231" font-size="12" fill="#1d2329">- certificateNo: String {frozen}</text>
+<text x="1048" y="1247" font-size="12" fill="#1d2329">- awardedDate: Date</text>
+<line x1="1040" y1="1254" x2="1220" y2="1254" stroke="#2F7D4F" stroke-width="1"/>
+<rect x="1270" y="900" width="184" height="148" fill="white" stroke="#56616B" stroke-width="1.5"/>
+<rect x="1270" y="900" width="184" height="24" fill="#E3E6EA" stroke="#56616B" stroke-width="1.5"/>
+<text x="1362.0" y="917" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">Campus</text>
+<text x="1278" y="939" font-size="12" fill="#1d2329">- campusCode: String {frozen}</text>
+<text x="1278" y="955" font-size="12" fill="#1d2329">- campusName: String</text>
+<text x="1278" y="971" font-size="12" fill="#1d2329">- suburb: String</text>
+<text x="1278" y="987" font-size="12" fill="#1d2329">- state: String</text>
+<text x="1278" y="1003" font-size="12" fill="#1d2329">- postcode: String</text>
+<text x="1278" y="1019" font-size="12" fill="#1d2329">- openedDate: Date</text>
+<line x1="1270" y1="1026" x2="1454" y2="1026" stroke="#56616B" stroke-width="1"/>
+<text x="1278" y="1041" font-size="12" fill="#1d2329">+ activeStudentCount(): Integer</text>
+<rect x="1400" y="600" width="168" height="100" fill="white" stroke="#2F7D4F" stroke-width="1.5"/>
+<rect x="1400" y="600" width="168" height="24" fill="#DCEFE3" stroke="#2F7D4F" stroke-width="1.5"/>
+<text x="1484.0" y="617" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">CourseOffering</text>
+<text x="1408" y="639" font-size="12" fill="#1d2329">- deliveryMode: String</text>
+<text x="1408" y="655" font-size="12" fill="#1d2329">- maxCapacity: Integer</text>
+<line x1="1400" y1="662" x2="1568" y2="662" stroke="#2F7D4F" stroke-width="1"/>
+<text x="1408" y="677" font-size="12" fill="#1d2329">+ remainingPlaces(): Integer</text>
+<text x="1408" y="693" font-size="12" fill="#1d2329">+ enrolledCount(): Integer</text>
+<rect x="1600" y="740" width="160" height="132" fill="white" stroke="#56616B" stroke-width="1.5"/>
+<rect x="1600" y="740" width="160" height="24" fill="#E3E6EA" stroke="#56616B" stroke-width="1.5"/>
+<text x="1680.0" y="757" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">Term</text>
+<text x="1608" y="779" font-size="12" fill="#1d2329">- termCode: String {frozen}</text>
+<text x="1608" y="795" font-size="12" fill="#1d2329">- academicYear: Integer</text>
+<text x="1608" y="811" font-size="12" fill="#1d2329">- termNumber: Integer</text>
+<text x="1608" y="827" font-size="12" fill="#1d2329">- startDate: Date</text>
+<text x="1608" y="843" font-size="12" fill="#1d2329">- endDate: Date</text>
+<line x1="1600" y1="850" x2="1760" y2="850" stroke="#56616B" stroke-width="1"/>
+<text x="1608" y="865" font-size="12" fill="#1d2329">+ next(): Term [0..1]</text>
+<rect x="1395" y="1330" width="178" height="100" fill="white" stroke="#2F7D4F" stroke-width="1.5"/>
+<rect x="1395" y="1330" width="178" height="24" fill="#DCEFE3" stroke="#2F7D4F" stroke-width="1.5"/>
+<text x="1484.0" y="1347" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle" font-style="italic">Subject</text>
+<text x="1403" y="1369" font-size="12" fill="#1d2329">- subjectCode: String {frozen}</text>
+<text x="1403" y="1385" font-size="12" fill="#1d2329">- subjectTitle: String</text>
+<text x="1403" y="1401" font-size="12" fill="#1d2329">- nominalHours: Integer</text>
+<line x1="1395" y1="1408" x2="1573" y2="1408" stroke="#2F7D4F" stroke-width="1"/>
+<text x="1403" y="1423" font-size="12" fill="#1d2329">+ allPrerequisites(): Subject [*]</text>
+<rect x="1330" y="1512" width="150" height="70" fill="white" stroke="#2F7D4F" stroke-width="1.5"/>
+<rect x="1330" y="1512" width="150" height="24" fill="#DCEFE3" stroke="#2F7D4F" stroke-width="1.5"/>
+<text x="1405.0" y="1529" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">QCAASubject</text>
+<text x="1338" y="1551" font-size="12" fill="#1d2329">- syllabusYear: Integer</text>
+<text x="1338" y="1567" font-size="12" fill="#1d2329">- subjectCategory: String</text>
+<line x1="1330" y1="1574" x2="1480" y2="1574" stroke="#2F7D4F" stroke-width="1"/>
+<rect x="1510" y="1512" width="178" height="70" fill="white" stroke="#2F7D4F" stroke-width="1.5"/>
+<rect x="1510" y="1512" width="178" height="24" fill="#DCEFE3" stroke="#2F7D4F" stroke-width="1.5"/>
+<text x="1599.0" y="1529" font-size="13" font-weight="bold" fill="#1d2329" text-anchor="middle">VETUnit</text>
+<text x="1518" y="1551" font-size="12" fill="#1d2329">- uocCode: String {frozen}</text>
+<text x="1518" y="1567" font-size="12" fill="#1d2329">- trainingPackageCode: String</text>
+<line x1="1510" y1="1574" x2="1688" y2="1574" stroke="#2F7D4F" stroke-width="1"/>
+<path d="M897.0,298.0 L888.0,313.0 L906.0,313.0 z" fill="white" stroke="#3a4550" stroke-width="1.3"/>
+<path d="M897.0,313.0 L897.0,340.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<path d="M471.0,340.0 L1408.0,340.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<path d="M471.0,340.0 L471.0,380.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<path d="M897.0,340.0 L897.0,380.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<path d="M1408.0,340.0 L1408.0,380.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="907.0" y="328.0" font-size="11.5" fill="#56616b" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">{complete, overlapping}</text>
+<path d="M562.0,410.0 L800.0,410.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="568.0" y="404.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<text x="794.0" y="404.0" font-size="11.5" fill="#1d2329" text-anchor="end" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">1..*</text>
+<text x="681.0" y="402.0" font-size="11.5" fill="#56616b" text-anchor="middle" font-style="italic" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">guardianOf ▶</text>
+<path d="M681.0,410.0 L681.0,468.0" fill="none" stroke="#3a4550" stroke-width="1.3" stroke-dasharray="6,4"/>
+<path d="M1516.0,416.0 L1560.0,416.0 L1560.0,468.0 L1516.0,468.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="1521.0" y="411.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">0..1</text>
+<text x="1521.0" y="482.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<text x="1566.0" y="446.0" font-size="11.5" fill="#56616b" text-anchor="start" font-style="italic" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">supervises ▼</text>
+<path d="M380.0,410.0 L354.0,410.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<circle cx="347.0" cy="410.0" r="7" fill="white" stroke="#3a4550" stroke-width="1.4"/>
+<text x="340.0" y="388.0" font-size="11" fill="#56616b" text-anchor="middle" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">AccountHolder</text>
+<path d="M994.0,408.0 L1020.0,408.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<circle cx="1027.0" cy="408.0" r="7" fill="white" stroke="#3a4550" stroke-width="1.4"/>
+<text x="1034.0" y="388.0" font-size="11" fill="#56616b" text-anchor="middle" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">AccountHolder</text>
+<path d="M320.0,1204.0 L294.0,1204.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<circle cx="287.0" cy="1204.0" r="7" fill="white" stroke="#3a4550" stroke-width="1.4"/>
+<text x="280.0" y="1182.0" font-size="11" fill="#56616b" text-anchor="middle" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">AccountHolder</text>
+<path d="M109.0,740.0 L109.0,664.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<path d="M103.5,675.0 L109.0,664.0 L114.5,675.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="116.0" y="680.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">1</text>
+<text x="116.0" y="734.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<text x="101.0" y="706.0" font-size="11.5" fill="#56616b" text-anchor="end" font-style="italic" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">heldBy</text>
+<path d="M204.0,780.0 L320.0,780.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="210.0" y="774.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">1</text>
+<text x="314.0" y="774.0" font-size="11.5" fill="#1d2329" text-anchor="end" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<text x="262.0" y="796.0" font-size="11.5" fill="#56616b" text-anchor="middle" font-style="italic" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">billedTo</text>
+<path d="M830.0,512.0 L830.0,640.0 L420.0,640.0 L420.0,700.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="836.0" y="528.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">1</text>
+<text x="426.0" y="694.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<text x="625.0" y="633.0" font-size="11.5" fill="#56616b" text-anchor="middle" font-style="italic" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">raisedFor ▶</text>
+<rect x="334" y="848" width="112" height="20" fill="white" stroke="#8E3B46" stroke-width="1.3"/><text x="390.0" y="862" font-size="11.5" fill="#1d2329" text-anchor="middle">lineNo: Integer</text>
+<path d="M390.0,868.0 L383.0,877.0 L390.0,886.0 L397.0,877.0 z" fill="#3a4550" stroke="#3a4550" stroke-width="1.3"/>
+<path d="M390.0,886.0 L390.0,950.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="397.0" y="944.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">0..1</text>
+<text x="398.0" y="922.0" font-size="11.5" fill="#56616b" text-anchor="start" font-style="italic" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">consistsOf</text>
+<path d="M506.0,804.0 L600.0,804.0 L600.0,950.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<path d="M605.5,939.0 L600.0,950.0 L594.5,939.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="512.0" y="798.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">1</text>
+<text x="609.0" y="944.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<text x="608.0" y="881.0" font-size="11.5" fill="#56616b" text-anchor="start" font-style="italic" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">settledBy</text>
+<path d="M900.0,512.0 L900.0,1204.0 L498.0,1204.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="906.0" y="528.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<text x="504.0" y="1198.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<text x="689.0" y="1196.0" font-size="11.5" fill="#56616b" text-anchor="middle" font-style="italic" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">◀ placedWith</text>
+<path d="M697.0,1204.0 L697.0,1272.0" fill="none" stroke="#3a4550" stroke-width="1.3" stroke-dasharray="6,4"/>
+<path d="M647.0,1372.0 L647.0,1440.0 L474.0,1440.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="653.0" y="1388.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<text x="480.0" y="1434.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">1</text>
+<text x="544.0" y="1457.0" font-size="11.5" fill="#56616b" text-anchor="middle" font-style="italic" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">governedBy</text>
+<path d="M960.0,512.0 L960.0,1330.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="966.0" y="528.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">1..*</text>
+<text x="966.0" y="1324.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<text x="952.0" y="1304.0" font-size="11.5" fill="#56616b" text-anchor="end" font-style="italic" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">enrolledIn ▼</text>
+<path d="M960.0,1040.0 L1040.0,1040.0" fill="none" stroke="#3a4550" stroke-width="1.3" stroke-dasharray="6,4"/>
+<path d="M1100.0,1100.0 L1100.0,1160.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<path d="M1105.5,1149.0 L1100.0,1160.0 L1094.5,1149.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="1108.0" y="1154.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">0..1 {addOnly}</text>
+<text x="1108.0" y="1115.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">1</text>
+<text x="1092.0" y="1134.0" font-size="11.5" fill="#56616b" text-anchor="end" font-style="italic" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">awarded</text>
+<path d="M1190.0,1030.0 L1270.0,1030.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="1196.0" y="1024.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<text x="1264.0" y="1024.0" font-size="11.5" fill="#1d2329" text-anchor="end" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">1</text>
+<text x="1230.0" y="1047.0" font-size="11.5" fill="#56616b" text-anchor="middle" font-style="italic" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">at</text>
+<path d="M994.0,450.0 L1230.0,450.0 L1230.0,640.0 L1400.0,640.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="1000.0" y="466.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<text x="1394.0" y="634.0" font-size="11.5" fill="#1d2329" text-anchor="end" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<text x="1116.0" y="443.0" font-size="11.5" fill="#56616b" text-anchor="middle" font-style="italic" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">takes ▶</text>
+<path d="M1186.0,560.0 L1230.0,560.0" fill="none" stroke="#3a4550" stroke-width="1.3" stroke-dasharray="6,4"/>
+<path d="M1110.0,614.0 L1103.0,623.0 L1110.0,632.0 L1117.0,623.0 z" fill="#3a4550" stroke="#3a4550" stroke-width="1.3"/>
+<path d="M1110.0,632.0 L1110.0,680.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="1118.0" y="674.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">0..1 {addOnly}</text>
+<path d="M1066.0,850.0 L1066.0,796.0" fill="none" stroke="#3a4550" stroke-width="1.3" stroke-dasharray="6,4"/>
+<path d="M1060.5,807.0 L1066.0,796.0 L1071.5,807.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="1074.0" y="827.0" font-size="11" fill="#56616b" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">«use»</text>
+<path d="M1066.0,934.0 L1066.0,1000.0" fill="none" stroke="#3a4550" stroke-width="1.3" stroke-dasharray="6,4"/>
+<path d="M1071.5,989.0 L1066.0,1000.0 L1060.5,989.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="1074.0" y="971.0" font-size="11" fill="#56616b" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">«use»</text>
+<path d="M1440.0,496.0 L1440.0,600.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="1447.0" y="512.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">1</text>
+<text x="1447.0" y="594.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<text x="1432.0" y="552.0" font-size="11.5" fill="#56616b" text-anchor="end" font-style="italic" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">leads ▼</text>
+<path d="M1484.0,782 L1510.0,800 L1484.0,818 L1458.0,800 z" fill="white" stroke="#3a4550" stroke-width="1.4"/>
+<path d="M1484.0,700.0 L1484.0,782.0" fill="none" stroke="#3a4550" stroke-width="1.3" stroke-dasharray="6,4"/>
+<path d="M1510.0,800.0 L1600.0,800.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="1594.0" y="794.0" font-size="11.5" fill="#1d2329" text-anchor="end" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<path d="M1458.0,800.0 L1360.0,800.0 L1360.0,900.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="1367.0" y="894.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<path d="M1484.0,818.0 L1484.0,1330.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="1491.0" y="1324.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<text x="1520.0" y="818.0" font-size="11.5" fill="#56616b" text-anchor="start" font-style="italic" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">scheduled</text>
+<path d="M1050.0,1370.0 L1059.0,1377.0 L1068.0,1370.0 L1059.0,1363.0 z" fill="white" stroke="#3a4550" stroke-width="1.3"/>
+<path d="M1068.0,1370.0 L1395.0,1370.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="1072.0" y="1363.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">1..*</text>
+<text x="1389.0" y="1364.0" font-size="11.5" fill="#1d2329" text-anchor="end" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">1..*</text>
+<text x="1130.0" y="1387.0" font-size="11.5" fill="#56616b" text-anchor="middle" font-style="italic" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">comprises</text>
+<path d="M1228.0,1370.0 L1228.0,1440.0" fill="none" stroke="#3a4550" stroke-width="1.3" stroke-dasharray="6,4"/>
+<path d="M1573.0,1360.0 L1615.0,1360.0 L1615.0,1406.0 L1573.0,1406.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="1578.0" y="1355.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<text x="1578.0" y="1420.0" font-size="11.5" fill="#1d2329" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">*</text>
+<text x="1621.0" y="1387.0" font-size="11.5" fill="#56616b" text-anchor="start" font-style="italic" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">prerequisiteOf</text>
+<path d="M1484.0,1430.0 L1475.0,1445.0 L1493.0,1445.0 z" fill="white" stroke="#3a4550" stroke-width="1.3"/>
+<path d="M1484.0,1445.0 L1484.0,1472.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<path d="M1405.0,1472.0 L1599.0,1472.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<path d="M1405.0,1472.0 L1405.0,1512.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<path d="M1599.0,1472.0 L1599.0,1512.0" fill="none" stroke="#3a4550" stroke-width="1.3"/>
+<text x="1494.0" y="1462.0" font-size="11.5" fill="#56616b" text-anchor="start" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">{complete, disjoint}</text>
+<path d="M40,380 L268,380 L280,392 L280,467 L40,467 z" fill="#FFFBEA" stroke="#B8A55C" stroke-width="1.1"/><path d="M268,380 L268,392 L280,392" fill="none" stroke="#B8A55C" stroke-width="1.1"/>
+<text x="48" y="396" font-size="11" fill="#1d2329" font-weight="bold">Category (union type)</text>
+<text x="48" y="411" font-size="11" fill="#1d2329">Each BillingAccount has exactly</text>
+<text x="48" y="426" font-size="11" fill="#1d2329">one holder: a Student, Guardian</text>
+<text x="48" y="441" font-size="11" fill="#1d2329">or HostEmployer, all of which</text>
+<text x="48" y="456" font-size="11" fill="#1d2329">realise «interface» AccountHolder.</text>
+<path d="M40,890 L268,890 L280,902 L280,977 L40,977 z" fill="#FFFBEA" stroke="#B8A55C" stroke-width="1.1"/><path d="M268,890 L268,902 L280,902" fill="none" stroke="#B8A55C" stroke-width="1.1"/>
+<text x="48" y="906" font-size="11" fill="#1d2329">Enforced in SQLite by UNIQUE</text>
+<text x="48" y="921" font-size="11" fill="#1d2329">account_no indexes + 6 triggers;</text>
+<text x="48" y="936" font-size="11" fill="#1d2329">in Neo4j by a uniqueness</text>
+<text x="48" y="951" font-size="11" fill="#1d2329">constraint on HOLDS_ACCOUNT</text>
+<text x="48" y="966" font-size="11" fill="#1d2329">.account_no (import.txt s.1).</text>
+<path d="M1060,70 L1748,70 L1760,82 L1760,242 L1060,242 z" fill="#FFFBEA" stroke="#B8A55C" stroke-width="1.1"/><path d="M1748,70 L1748,82 L1760,82" fill="none" stroke="#B8A55C" stroke-width="1.1"/>
+<text x="1068" y="86" font-size="12" fill="#1d2329" font-weight="bold">Revised for Assessment 4 (Assessment 2 feedback)</text>
+<text x="1068" y="102" font-size="12" fill="#1d2329">1  Academic classes added: Program, ProgramSubject, Subject {abstract}, QCAASubject, VETUnit,</text>
+<text x="1068" y="118" font-size="12" fill="#1d2329">      Term, Enrolment, Result, Qualification; placement classes added: HostEmployer,</text>
+<text x="1068" y="134" font-size="12" fill="#1d2329">      Placement, PlacementAgreement.</text>
+<text x="1068" y="150" font-size="12" fill="#1d2329">2  Composition corrected: the filled diamond sits at the Invoice (whole) end.</text>
+<text x="1068" y="166" font-size="12" fill="#1d2329">3  Billing-account category modelled through «interface» AccountHolder (exactly one holder).</text>
+<text x="1068" y="182" font-size="12" fill="#1d2329">4  phoneNumber is [0..*] (20 of the 42 people have no phone); staffedBy removed – not in the</text>
+<text x="1068" y="198" font-size="12" fill="#1d2329">      schema: a trainer&#x27;s campuses follow from the offerings they lead. Shared aggregation</text>
+<text x="1068" y="214" font-size="12" fill="#1d2329">      is now Program ◇ Subject: a subject exists independently and is shared by programs.</text>
+<text x="1068" y="230" font-size="12" fill="#1d2329">Associations without an arrowhead are bidirectional; ▶ gives the reading direction of a name.</text>
+<text x="40.0" y="44.0" font-size="20" fill="#1d2329" text-anchor="start" font-weight="bold" paint-order="stroke" stroke="white" stroke-width="3" stroke-linejoin="round">The Industry School – UML class diagram (Assessment 2, revised)</text></svg>

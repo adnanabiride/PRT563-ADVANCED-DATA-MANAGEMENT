@@ -1,0 +1,205 @@
+// =============================================================================
+// PRT563 Advanced Data Management - Assessment 4 - Group 2
+// The Industry School - TASK 3: FOUR CYPHER QUERY USE CASES (Model B)
+//
+// Prerequisite: import.txt has been run and its validation section (8.x)
+//               returned the expected counts.
+// Reporting date: every time-dependent query starts with
+//                     WITH date('2026-09-14') AS as_at
+//                 (Monday of the last week of Term 3), so the results in the
+//                 report can be reproduced exactly. In production, replace the
+//                 literal with date().
+// Grades:  QCAA subjects carry grade_letter A-E (A-C is a pass).
+//          VET units carry competency_outcome C (competent) or NYC.
+//          Both live on the [:TOOK] relationship (RESULT folded into it).
+// =============================================================================
+
+
+// -----------------------------------------------------------------------------
+// Q1  ASSESSMENT CONFLICT OF INTEREST                      (complexity: moderate)
+// -----------------------------------------------------------------------------
+// Scenario  Assessment must be impartial. Because PERSON's specialisation is
+//           overlapping, one person can be a trainer AND a parent. The
+//           compliance manager asks: which staff members are rostered to assess
+//           their own dependants, has that assessment already been graded, and
+//           which qualified colleague could take it over?
+// Cypher    label expression (Staff&Guardian); cycle-closing pattern (p is bound
+//           at both ends of the path); OPTIONAL MATCH with several patterns;
+//           COLLECT subquery with RETURN DISTINCT; EXISTS subquery; CASE;
+//           temporal comparison; toString().
+MATCH (p:Staff&Guardian)-[g:GUARDIAN_OF]->(child:Student)
+OPTIONAL MATCH (child)-[t:TOOK]->(o:CourseOffering)<-[:LEADS]-(p),
+               (o)-[:OF_SUBJECT]->(subj:Subject),
+               (o)-[:IN_TERM]->(term:Term)
+RETURN p.preferred_name + ' ' + p.family_name         AS staff_member,
+       p.position_title                                 AS position,
+       child.preferred_name + ' ' + child.family_name AS dependant,
+       g.relationship_type                              AS relationship,
+       CASE WHEN o IS NULL THEN 'No conflict' ELSE 'CONFLICT' END AS finding,
+       subj.subject_code + ' ' + subj.subject_title     AS subject,
+       o.campus_code                                    AS campus,
+       term.term_code                                   AS term,
+       CASE WHEN o IS NULL THEN null
+            WHEN t.result_type IS NULL THEN 'Not yet assessed - reassign assessor now'
+            ELSE 'Result awarded ' + toString(t.awarded_date) + ' - independent re-mark'
+       END                                              AS action,
+       COLLECT {
+         MATCH (alt:Staff)-[:LEADS]->(:CourseOffering)-[:OF_SUBJECT]->(subj)
+         WHERE alt <> p
+           AND NOT EXISTS { (alt)-[:GUARDIAN_OF]->(child) }
+           AND alt.blue_card_expiry >= term.end_date
+         RETURN DISTINCT alt.preferred_name + ' ' + alt.family_name
+       }                                                AS eligible_assessors
+ORDER BY finding, staff_member;
+
+
+// -----------------------------------------------------------------------------
+// Q2  BLUE CARD COMPLIANCE SWEEP FOR NEXT TERM              (complexity: moderate)
+// -----------------------------------------------------------------------------
+// Scenario  Queensland law requires a valid blue card (working-with-children
+//           check) for anyone working with students. Before next term's roster
+//           is published, list every staff member whose card lapses before the
+//           END of next term, whether they are rostered to teach, how many
+//           students would be left without a trainer, and the escalation chain
+//           and contact for the manager who must act.
+// Cypher    temporal values and duration.inDays(); chained comparison;
+//           derived [:NEXT_TERM] hop; variable-length path [:SUPERVISES*0..]
+//           to the root of the hierarchy; EXISTS and COLLECT subqueries;
+//           path functions nodes() and reverse(); reduce() for string building;
+//           list indexing; coalesce() over the pivoted phone properties.
+WITH date('2026-09-14') AS as_at
+MATCH (cur:Term)
+WHERE cur.start_date <= as_at <= cur.end_date
+MATCH (cur)-[:NEXT_TERM]->(nxt:Term)
+MATCH (s:Staff)
+WHERE s.blue_card_expiry <= nxt.end_date
+MATCH chain = (top:Staff)-[:SUPERVISES*0..]->(s)
+WHERE NOT EXISTS { ()-[:SUPERVISES]->(top) }
+WITH as_at, nxt, s, reverse(nodes(chain)) AS upward,
+     COLLECT { MATCH (s)-[:LEADS]->(o:CourseOffering)-[:IN_TERM]->(nxt)
+               RETURN o.subject_code + '@' + o.campus_code } AS rostered,
+     COLLECT { MATCH (s)-[:LEADS]->(o:CourseOffering)-[:IN_TERM]->(nxt),
+                     (o)<-[e:TOOK]-(st:Student)
+               WHERE e.status = 'ENROLLED'
+               RETURN DISTINCT st.person_id } AS students
+RETURN s.preferred_name + ' ' + s.family_name                     AS staff_member,
+       s.position_title                                             AS position,
+       s.blue_card_expiry                                           AS blue_card_expiry,
+       duration.inDays(as_at, s.blue_card_expiry).days              AS days_remaining,
+       CASE
+         WHEN size(rostered) = 0 THEN 'RENEW - not rostered in ' + nxt.term_code
+         WHEN s.blue_card_expiry < nxt.start_date
+              THEN 'BLOCKER - lapses before ' + nxt.term_code + ' starts'
+         ELSE 'BLOCKER - lapses during ' + nxt.term_code
+       END                                                          AS risk,
+       rostered                                                     AS offerings_next_term,
+       size(students)                                               AS students_affected,
+       reduce(chain_text = '', x IN upward |
+              chain_text + CASE WHEN chain_text = '' THEN '' ELSE ' > ' END
+                         + x.preferred_name)                        AS escalation_chain,
+       coalesce(upward[1].phone_mobile, upward[1].phone_work,
+                upward[1].email)                                    AS manager_contact
+ORDER BY risk, days_remaining;
+
+
+// -----------------------------------------------------------------------------
+// Q3  CAMPUS DEBT EXPOSURE AGAINST THE SCHOOL-WIDE AVERAGE   (complexity: high)
+//     (corrects the Assessment 2 debt query: campuses owing nothing now count
+//      in the school-wide average)
+// -----------------------------------------------------------------------------
+// Scenario  The finance manager wants every campus's outstanding student debt,
+//           how much of it is more than 90 days overdue, and which campuses sit
+//           above the school-wide average so collection effort goes there first.
+//           The average must be taken over ALL campuses: a campus with no debt
+//           contributes 0 to the numerator and 1 to the denominator.
+// Cypher    campus-driven OPTIONAL MATCH with a WHERE that filters only the
+//           optional pattern (debt-free campuses survive as empty lists);
+//           collect(DISTINCT) and count(DISTINCT), so an invoice counts once even
+//           if its student held two active enrolments at the campus; two-stage
+//           aggregation through collect() of maps and
+//           UNWIND; reduce() for sums; duration.inDays() for ageing; round();
+//           the materialised Invoice.balance_owing (import.txt, section 7.2).
+WITH date('2026-09-14') AS as_at
+MATCH (c:Campus)
+OPTIONAL MATCH (c)<-[:AT_CAMPUS]-(:Enrolment {enrolment_status: 'ACTIVE'})
+               <-[:HAS_ENROLMENT]-(s:Student)<-[:RAISED_FOR]-(i:Invoice)
+WHERE i.balance_owing > 0
+WITH as_at, c, collect(DISTINCT i) AS open_invoices, count(DISTINCT s) AS debtors
+WITH as_at, c, open_invoices, debtors,
+     reduce(total = 0.0, x IN open_invoices | total + x.balance_owing) AS debt,
+     reduce(aged = 0.0, x IN open_invoices |
+            aged + CASE WHEN duration.inDays(x.due_date, as_at).days > 90
+                        THEN x.balance_owing ELSE 0.0 END)              AS aged_90
+WITH collect({campus: c.campus_name, invoices: size(open_invoices),
+              debtors: debtors, debt: debt, aged_90: aged_90})        AS campuses
+WITH campuses,
+     reduce(total = 0.0, x IN campuses | total + x.debt) / size(campuses) AS school_average
+UNWIND campuses AS row
+RETURN row.campus                                         AS campus,
+       row.invoices                                       AS open_invoices,
+       row.debtors                                        AS debtor_students,
+       round(row.debt, 2)                                 AS balance_owing,
+       round(row.debt - school_average, 2)                AS variance_vs_average,
+       CASE WHEN row.debt = 0 THEN 0.0
+            ELSE round(100.0 * row.aged_90 / row.debt, 1) END AS pct_over_90_days,
+       CASE WHEN row.debt > school_average THEN 'ABOVE AVERAGE - escalate'
+            ELSE 'within average' END                     AS flag,
+       round(school_average, 2)                           AS school_average
+ORDER BY balance_owing DESC;
+
+
+// -----------------------------------------------------------------------------
+// Q4  PREREQUISITE BREACHES AND THEIR ROOT CAUSE             (complexity: high)
+// -----------------------------------------------------------------------------
+// Scenario  The curriculum lead suspects students are sitting subjects without
+//           having passed the prerequisites. For every current or completed
+//           subject enrolment, find each prerequisite (at ANY depth of the
+//           prerequisite chain) that the student had not passed in an earlier
+//           term, show the student's history with that prerequisite, and
+//           classify the root cause so it can be fixed at the source:
+//             - Enrolled outside program   : the subject is not in the student's
+//                                            program at all (enrolment advice)
+//             - Program design gap         : the program includes the subject but
+//                                            not its prerequisite (curriculum)
+//             - Progression control failure: both are in the program, the
+//                                            student progressed without a pass
+// Cypher    quantified relationship -[:REQUIRES]->+ (transitive closure, Neo4j
+//           5.9+); pattern comprehension with its own WHERE and a nested pattern
+//           comprehension; list predicate none(); head(); coalesce(); map
+//           projection; reduce() over a list of maps; CASE with EXISTS
+//           subqueries; OPTIONAL MATCH on an inline property filter.
+MATCH (s:Student)-[t:TOOK]->(o:CourseOffering)-[:OF_SUBJECT]->(subj:Subject),
+      (o)-[:IN_TERM]->(term:Term)
+WHERE t.status <> 'WITHDRAWN'
+MATCH (subj)-[:REQUIRES]->+(pre:Subject)
+WITH DISTINCT s, t, subj, term, pre
+WITH s, t, subj, term, pre,
+     [(s)-[t2:TOOK]->(o2:CourseOffering)-[:OF_SUBJECT]->(pre)
+        | {term:    o2.term_code,
+           start:   head([(o2)-[:IN_TERM]->(x:Term) | x.start_date]),
+           outcome: coalesce(t2.grade_letter, t2.competency_outcome, t2.status)}]
+       AS attempts
+WHERE none(a IN attempts WHERE a.start < term.start_date
+                           AND a.outcome IN ['A', 'B', 'C'])
+OPTIONAL MATCH (s)-[:HAS_ENROLMENT]->(:Enrolment {enrolment_status: 'ACTIVE'})
+               -[:IN_PROGRAM]->(prog:Program)
+RETURN s.student_no                                   AS student_no,
+       s.preferred_name + ' ' + s.family_name         AS student,
+       prog.program_code                              AS program,
+       subj.subject_code                              AS subject,
+       term.term_code                                 AS term,
+       t.status                                       AS status,
+       pre.subject_code                               AS unmet_prerequisite,
+       CASE size(attempts)
+         WHEN 0 THEN 'never attempted'
+         ELSE reduce(h = '', a IN attempts |
+                     h + CASE WHEN h = '' THEN '' ELSE ', ' END
+                       + a.term + ' ' + a.outcome)
+       END                                            AS prerequisite_history,
+       CASE
+         WHEN prog IS NULL                               THEN 'No active enrolment'
+         WHEN NOT EXISTS { (prog)-[:INCLUDES]->(subj) }  THEN 'Enrolled outside program'
+         WHEN NOT EXISTS { (prog)-[:INCLUDES]->(pre) }   THEN 'Program design gap'
+         ELSE 'Progression control failure'
+       END                                            AS root_cause
+ORDER BY root_cause, program, student_no, subject;

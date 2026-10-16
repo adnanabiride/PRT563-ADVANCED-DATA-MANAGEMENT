@@ -1,0 +1,15 @@
+list,card,owner,labels,checklist
+Task 1 – Graph model,Design Model B and the conversion rules; draw the graph model diagram,Md Adnan Abir,Task 1,draft; runs in Neo4j Desktop; matches EXPECTED_RESULTS.md; reviewed by a second member; linked in the report
+Task 1 – Graph model,Revise the Assessment 2 UML (feedback),Md Adnan Abir,Task 1; A2 feedback,draft; runs in Neo4j Desktop; matches EXPECTED_RESULTS.md; reviewed by a second member; linked in the report
+Task 2 – Import,"Write import.txt (constraints, indexes, LOAD CSV, validation)",Md Adnan Abir,Task 2,draft; runs in Neo4j Desktop; matches EXPECTED_RESULTS.md; reviewed by a second member; linked in the report
+Task 2 – Import,Write the baseline loader and the cell-level reconciliation,Md Adnan Abir,Task 2,draft; runs in Neo4j Desktop; matches EXPECTED_RESULTS.md; reviewed by a second member; linked in the report
+Task 2 – Import,Enforce the billing-account category (SQL fix + constraint),Cynthia Ebele Ikegbunam,Task 2; A2 feedback,draft; runs in Neo4j Desktop; matches EXPECTED_RESULTS.md; reviewed by a second member; linked in the report
+Task 3 – Queries,Q1 assessment conflict of interest,Chepngenoh S Chepkwony,Task 3,draft; runs in Neo4j Desktop; matches EXPECTED_RESULTS.md; reviewed by a second member; linked in the report
+Task 3 – Queries,Q2 blue card compliance sweep,Chepngenoh S Chepkwony,Task 3,draft; runs in Neo4j Desktop; matches EXPECTED_RESULTS.md; reviewed by a second member; linked in the report
+Task 3 – Queries,Q3 campus debt + corrected Assessment 2 debt query,Cynthia Ebele Ikegbunam,Task 3; A2 feedback,draft; runs in Neo4j Desktop; matches EXPECTED_RESULTS.md; reviewed by a second member; linked in the report
+Task 3 – Queries,Q4 prerequisite breaches and root cause,Chepngenoh S Chepkwony,Task 3,draft; runs in Neo4j Desktop; matches EXPECTED_RESULTS.md; reviewed by a second member; linked in the report
+Task 3 – Queries,Modelling experiment and PROFILE script,Md Adnan Abir; Chepngenoh S Chepkwony,Task 3,draft; runs in Neo4j Desktop; matches EXPECTED_RESULTS.md; reviewed by a second member; linked in the report
+Task 4 – Centrality,Run seven algorithms; ground-truth evaluation; risk register,Najmus Sakeeb,Task 4,draft; runs in Neo4j Desktop; matches EXPECTED_RESULTS.md; reviewed by a second member; linked in the report
+Task 5 – Similarity,Nine similarity variants; leave-one-out test; recommendations,Najmus Sakeeb,Task 5,draft; runs in Neo4j Desktop; matches EXPECTED_RESULTS.md; reviewed by a second member; linked in the report
+Report,"Introduction, Table 1 and Conclusion; integrate and proof-read",Cynthia Ebele Ikegbunam,Report,draft; runs in Neo4j Desktop; matches EXPECTED_RESULTS.md; reviewed by a second member; linked in the report
+Report,Repository README and expected results,Chepngenoh S Chepkwony,Report,draft; runs in Neo4j Desktop; matches EXPECTED_RESULTS.md; reviewed by a second member; linked in the report

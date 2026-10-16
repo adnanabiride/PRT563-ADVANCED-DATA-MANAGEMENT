@@ -1,0 +1,174 @@
+// =============================================================================
+// PRT563 Assessment 4 - Group 2 - TASK 4: CENTRALITY USE CASE
+// Key-person risk in the teaching-delivery network
+//
+// Requires: Graph Data Science library 2.x installed on the DBMS (Neo4j
+//           Desktop: select the DBMS > Plugins > Graph Data Science > Install).
+//           import.txt has been run.
+// Question: which people are single points of failure - whose absence would
+//           most disrupt teaching delivery and communication in the school?
+// Network : Staff, CourseOffering and Student nodes connected by LEADS, TOOK
+//           and SUPERVISES, treated as UNDIRECTED (a disruption travels both
+//           ways along a teaching or reporting line).
+// Output  : seven algorithms, compared in Section 6 of the report; the
+//           recommended ones are written back to the database and combined
+//           with compliance data in a key-person risk register (C9).
+// =============================================================================
+
+
+// C0  Remove an earlier in-memory projection of the same name (safe to re-run)
+CALL gds.graph.drop('delivery', false) YIELD graphName
+RETURN graphName;
+
+
+// C1  Native projection. Expected: nodeCount 65 (24 students + 10 staff +
+//     32 offerings - 1, because Priya Raman is Student AND Staff in one node),
+//     relationshipCount 272 (136 relationships stored in both directions).
+CALL gds.graph.project(
+  'delivery',
+  ['Staff', 'CourseOffering', 'Student'],
+  {
+    LEADS:      {orientation: 'UNDIRECTED'},
+    TOOK:       {orientation: 'UNDIRECTED'},
+    SUPERVISES: {orientation: 'UNDIRECTED'}
+  }
+)
+YIELD graphName, nodeCount, relationshipCount
+RETURN graphName, nodeCount, relationshipCount;
+
+
+// C2  Memory estimate before running the most expensive algorithm (O(n*m))
+CALL gds.betweenness.write.estimate('delivery', {writeProperty: 'betweenness'})
+YIELD nodeCount, relationshipCount, requiredMemory
+RETURN nodeCount, relationshipCount, requiredMemory;
+
+
+// C3  Run all seven algorithms in MUTATE mode: scores are stored in the
+//     in-memory graph only, so they can be compared side by side in C5.
+CALL gds.degree.mutate('delivery', {mutateProperty: 'degree'})
+YIELD nodePropertiesWritten
+RETURN 'degree' AS algorithm, nodePropertiesWritten;
+
+CALL gds.pageRank.mutate('delivery', {mutateProperty: 'pagerank', dampingFactor: 0.85, maxIterations: 20})
+YIELD nodePropertiesWritten, ranIterations, didConverge
+RETURN 'pageRank' AS algorithm, nodePropertiesWritten, ranIterations, didConverge;
+
+CALL gds.articleRank.mutate('delivery', {mutateProperty: 'articlerank'})
+YIELD nodePropertiesWritten, ranIterations, didConverge
+RETURN 'articleRank' AS algorithm, nodePropertiesWritten, ranIterations, didConverge;
+
+// PageRank above also stops at its 20-iteration limit (didConverge = false);
+// ArticleRank converges in 19 iterations (both verified on GDS 2026.09).
+// Eigenvector: expect didConverge = false after the default 20 iterations.
+// The network is almost bipartite (offerings on one side, people on the
+// other; only the 9 SUPERVISES links break it), so power iteration
+// oscillates. This is one of the findings of the comparison.
+CALL gds.eigenvector.mutate('delivery', {mutateProperty: 'eigenvector'})
+YIELD nodePropertiesWritten, ranIterations, didConverge
+RETURN 'eigenvector' AS algorithm, nodePropertiesWritten, ranIterations, didConverge;
+
+CALL gds.betweenness.mutate('delivery', {mutateProperty: 'betweenness'})
+YIELD nodePropertiesWritten
+RETURN 'betweenness' AS algorithm, nodePropertiesWritten;
+
+CALL gds.closeness.mutate('delivery', {mutateProperty: 'closeness'})
+YIELD nodePropertiesWritten
+RETURN 'closeness' AS algorithm, nodePropertiesWritten;
+
+CALL gds.closeness.harmonic.mutate('delivery', {mutateProperty: 'harmonic'})
+YIELD nodePropertiesWritten
+RETURN 'harmonic' AS algorithm, nodePropertiesWritten;
+
+
+// C4  Eigenvector convergence check: how many iterations does it really need?
+//     (GDS 2026.09: ranIterations 227, didConverge true)
+CALL gds.eigenvector.stats('delivery', {maxIterations: 1000})
+YIELD ranIterations, didConverge
+RETURN ranIterations, didConverge;
+
+
+// C5  Side-by-side comparison for the 10 staff members (scores and ranks).
+CALL gds.graph.nodeProperties.stream(
+  'delivery',
+  ['degree', 'pagerank', 'articlerank', 'eigenvector', 'betweenness', 'closeness', 'harmonic'],
+  ['Staff'])
+YIELD nodeId, nodeProperty, propertyValue
+WITH gds.util.asNode(nodeId) AS s, collect([nodeProperty, propertyValue]) AS kv
+WITH s, [p IN kv WHERE p[0] = 'degree'][0][1]      AS degree,
+        [p IN kv WHERE p[0] = 'pagerank'][0][1]    AS pagerank,
+        [p IN kv WHERE p[0] = 'articlerank'][0][1] AS articlerank,
+        [p IN kv WHERE p[0] = 'eigenvector'][0][1] AS eigenvector,
+        [p IN kv WHERE p[0] = 'betweenness'][0][1] AS betweenness,
+        [p IN kv WHERE p[0] = 'closeness'][0][1]   AS closeness,
+        [p IN kv WHERE p[0] = 'harmonic'][0][1]    AS harmonic
+RETURN s.preferred_name + ' ' + s.family_name AS staff_member,
+       degree, round(pagerank, 4) AS pagerank, round(articlerank, 4) AS articlerank,
+       round(eigenvector, 4) AS eigenvector, round(betweenness, 1) AS betweenness,
+       round(closeness, 4) AS closeness, round(harmonic, 4) AS harmonic
+ORDER BY betweenness DESC;
+
+
+// C6  Top five nodes of ANY type for one algorithm (repeat with another
+//     property name to see how the algorithms disagree on offerings/students).
+CALL gds.graph.nodeProperty.stream('delivery', 'betweenness')
+YIELD nodeId, propertyValue
+WITH gds.util.asNode(nodeId) AS n, propertyValue AS score
+RETURN [l IN labels(n) WHERE l IN ['Staff', 'Student', 'CourseOffering']] AS type,
+       coalesce(n.preferred_name + ' ' + n.family_name,
+                n.subject_code + '@' + n.campus_code + ' ' + n.term_code) AS node,
+       round(score, 2) AS score
+ORDER BY score DESC
+LIMIT 5;
+
+
+// C7  Sensitivity: PageRank under three damping factors (does the ranking move?)
+UNWIND [0.50, 0.85, 0.95] AS d
+CALL {
+  WITH d
+  CALL gds.pageRank.stream('delivery', {dampingFactor: d})
+  YIELD nodeId, score
+  WITH gds.util.asNode(nodeId) AS n, score
+  WHERE n:Staff
+  WITH n, score ORDER BY score DESC
+  RETURN collect(n.preferred_name)[0..3] AS top3_staff
+}
+RETURN d AS damping_factor, top3_staff;
+
+
+// C8  Persist the recommended measures (Section 6.4) to the database.
+CALL gds.betweenness.write('delivery', {writeProperty: 'betweenness'})
+YIELD nodePropertiesWritten
+RETURN nodePropertiesWritten;
+
+CALL gds.closeness.harmonic.write('delivery', {writeProperty: 'harmonic'})
+YIELD nodePropertiesWritten
+RETURN nodePropertiesWritten;
+
+
+// C9  KEY-PERSON RISK REGISTER - graph analytics joined with compliance data:
+//     brokerage (betweenness), reach (harmonic), workload and blue card status.
+WITH date('2026-09-14') AS as_at
+MATCH (s:Staff)
+WITH as_at, s ORDER BY s.betweenness DESC
+WITH as_at, collect(s) AS ranked
+UNWIND range(0, size(ranked) - 1) AS i
+WITH as_at, ranked[i] AS s, i + 1 AS risk_rank
+RETURN risk_rank,
+       s.preferred_name + ' ' + s.family_name                         AS staff_member,
+       s.position_title                                               AS position,
+       round(s.betweenness, 1)                                        AS betweenness,
+       round(s.harmonic, 3)                                           AS harmonic,
+       COUNT { (s)-[:LEADS]->(:CourseOffering) }                      AS offerings_led,
+       size(COLLECT { MATCH (s)-[:LEADS]->(:CourseOffering)<-[:TOOK]-(st:Student)
+                      RETURN DISTINCT st })                           AS students_taught,
+       COUNT { (s)-[:SUPERVISES]->(:Staff) }                          AS direct_reports,
+       CASE WHEN s.blue_card_expiry <= as_at + duration('P90D')
+            THEN 'lapses ' + toString(s.blue_card_expiry) ELSE 'valid' END AS blue_card,
+       CASE WHEN risk_rank <= 3 THEN 'Succession plan + deputy required'
+            ELSE 'Monitor' END                                        AS action
+ORDER BY risk_rank;
+
+
+// C10 Release the in-memory graph
+CALL gds.graph.drop('delivery') YIELD graphName
+RETURN graphName;

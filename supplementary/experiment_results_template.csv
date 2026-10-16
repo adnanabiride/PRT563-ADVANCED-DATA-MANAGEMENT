@@ -1,0 +1,13 @@
+query,model,replica_logical_accesses,profile_db_hits,rows_returned,notes
+Q1 assessment conflict of interest,Model A,98,,,record the second (warm) run
+Q1 assessment conflict of interest,Model B,62,,,record the second (warm) run
+Q2 blue card sweep,Model A,194,,,record the second (warm) run
+Q2 blue card sweep,Model B,176,,,record the second (warm) run
+Q3 campus debt,Model A,392,,,record the second (warm) run
+Q3 campus debt,Model B,264,,,record the second (warm) run
+Q4 prerequisite breaches,Model A,1034,,,record the second (warm) run
+Q4 prerequisite breaches,Model B,827,,,record the second (warm) run
+W1 student profile (student_no 'S2026001'),Model A,55,,,record the second (warm) run
+W1 student profile (student_no 'S2026001'),Model B,38,,,record the second (warm) run
+W2 account statement (account_no 'ACC-1001'),Model A,22,,,record the second (warm) run
+W2 account statement (account_no 'ACC-1001'),Model B,14,,,record the second (warm) run

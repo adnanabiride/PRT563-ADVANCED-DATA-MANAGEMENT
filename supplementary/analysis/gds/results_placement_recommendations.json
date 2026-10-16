@@ -1,0 +1,146 @@
+[
+ {
+  "student": "Tali Nguyen",
+  "person_id": "P1001",
+  "program": "PRG102",
+  "campus": "EGLF",
+  "recommendation": "Redlands Office Solutions",
+  "score": 0.284,
+  "peers": [
+   "Sienna Marsh (0.161)",
+   "Priya Raman (0.123)"
+  ]
+ },
+ {
+  "student": "Ethan Brady",
+  "person_id": "P1006",
+  "program": "PRG103",
+  "campus": "RDLD",
+  "recommendation": "NO PEER IN PROGRAM - cold start",
+  "score": null,
+  "peers": []
+ },
+ {
+  "student": "Amara Nkemelu",
+  "person_id": "P1007",
+  "program": "PRG102",
+  "campus": "RDLD",
+  "recommendation": "Redlands Office Solutions",
+  "score": 0.229,
+  "peers": [
+   "Priya Raman (0.115)",
+   "Sienna Marsh (0.114)"
+  ]
+ },
+ {
+  "student": "Lucas Hartley",
+  "person_id": "P1008",
+  "program": "PRG101",
+  "campus": "CBLT",
+  "recommendation": "Moreton Trade Services",
+  "score": 0.411,
+  "peers": [
+   "Willow Reid (0.333)",
+   "Malik Traore (0.211)",
+   "Bilal Haddad (0.200)"
+  ]
+ },
+ {
+  "student": "Noah Petrov",
+  "person_id": "P1010",
+  "program": "PRG103",
+  "campus": "RDLD",
+  "recommendation": "NO PEER IN PROGRAM - cold start",
+  "score": null,
+  "peers": []
+ },
+ {
+  "student": "Ruby Tanaka",
+  "person_id": "P1023",
+  "program": "PRG102",
+  "campus": "EGLF",
+  "recommendation": "Redlands Office Solutions",
+  "score": 0.253,
+  "peers": [
+   "Sienna Marsh (0.130)",
+   "Priya Raman (0.123)"
+  ]
+ },
+ {
+  "student": "Oscar Delaney",
+  "person_id": "P1024",
+  "program": "PRG104",
+  "campus": "IPSW",
+  "recommendation": "Moreton Bay Childcare",
+  "score": 0.272,
+  "peers": [
+   "Zara Ahmadi (0.140)",
+   "Mia Fletcher (0.132)",
+   "Freya Lindqvist (0.114)"
+  ]
+ },
+ {
+  "student": "Hunter Kelly",
+  "person_id": "P1026",
+  "program": "PRG103",
+  "campus": "IPSW",
+  "recommendation": "NO PEER IN PROGRAM - cold start",
+  "score": null,
+  "peers": []
+ },
+ {
+  "student": "Isla Moreau",
+  "person_id": "P1027",
+  "program": "PRG102",
+  "campus": "RDLD",
+  "recommendation": "Redlands Office Solutions",
+  "score": 0.284,
+  "peers": [
+   "Sienna Marsh (0.161)",
+   "Priya Raman (0.123)"
+  ]
+ },
+ {
+  "student": "Diego Salazar",
+  "person_id": "P1028",
+  "program": "PRG103",
+  "campus": "RDLD",
+  "recommendation": "NO PEER IN PROGRAM - cold start",
+  "score": null,
+  "peers": []
+ },
+ {
+  "student": "Chloe Barrett",
+  "person_id": "P1031",
+  "program": "PRG102",
+  "campus": "CBLT",
+  "recommendation": "Redlands Office Solutions",
+  "score": 0.257,
+  "peers": [
+   "Priya Raman (0.140)",
+   "Sienna Marsh (0.118)"
+  ]
+ },
+ {
+  "student": "Aarav Chandra",
+  "person_id": "P1032",
+  "program": "PRG103",
+  "campus": "CBLT",
+  "recommendation": "NO PEER IN PROGRAM - cold start",
+  "score": null,
+  "peers": []
+ },
+ {
+  "student": "Samuel Otieno",
+  "person_id": "P1034",
+  "program": "PRG104",
+  "campus": "TWMB",
+  "recommendation": "Moreton Bay Childcare",
+  "score": 0.297,
+  "peers": [
+   "Freya Lindqvist (0.224)",
+   "Zara Ahmadi (0.159)",
+   "Mia Fletcher (0.138)"
+  ]
+ }
+]

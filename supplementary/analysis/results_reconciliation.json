@@ -1,0 +1,189 @@
+{
+ "tables": [
+  {
+   "table": "campus",
+   "rows": 5,
+   "checks": 35,
+   "mismatches": 0,
+   "target": ":Campus"
+  },
+  {
+   "table": "term",
+   "rows": 4,
+   "checks": 24,
+   "mismatches": 0,
+   "target": ":Term"
+  },
+  {
+   "table": "program",
+   "rows": 4,
+   "checks": 20,
+   "mismatches": 0,
+   "target": ":Program"
+  },
+  {
+   "table": "subject",
+   "rows": 8,
+   "checks": 40,
+   "mismatches": 0,
+   "target": ":Subject (+ label as discriminator)"
+  },
+  {
+   "table": "qcaa_subject",
+   "rows": 4,
+   "checks": 16,
+   "mismatches": 0,
+   "target": ":Subject:QCAASubject"
+  },
+  {
+   "table": "vet_unit",
+   "rows": 4,
+   "checks": 16,
+   "mismatches": 0,
+   "target": ":Subject:VETUnit"
+  },
+  {
+   "table": "host_employer",
+   "rows": 8,
+   "checks": 48,
+   "mismatches": 0,
+   "target": ":HostEmployer + HOLDS_ACCOUNT"
+  },
+  {
+   "table": "billing_account",
+   "rows": 22,
+   "checks": 88,
+   "mismatches": 0,
+   "target": ":BillingAccount"
+  },
+  {
+   "table": "placement_agreement",
+   "rows": 11,
+   "checks": 55,
+   "mismatches": 0,
+   "target": ":PlacementAgreement"
+  },
+  {
+   "table": "person",
+   "rows": 42,
+   "checks": 462,
+   "mismatches": 0,
+   "target": ":Person"
+  },
+  {
+   "table": "person_phone",
+   "rows": 27,
+   "checks": 54,
+   "mismatches": 0,
+   "target": "Person.phone_mobile / phone_home / phone_work"
+  },
+  {
+   "table": "student",
+   "rows": 24,
+   "checks": 144,
+   "mismatches": 0,
+   "target": ":Person:Student + HOLDS_ACCOUNT"
+  },
+  {
+   "table": "staff",
+   "rows": 10,
+   "checks": 60,
+   "mismatches": 0,
+   "target": ":Person:Staff + SUPERVISES"
+  },
+  {
+   "table": "guardian",
+   "rows": 11,
+   "checks": 33,
+   "mismatches": 0,
+   "target": ":Person:Guardian + HOLDS_ACCOUNT"
+  },
+  {
+   "table": "course_offering",
+   "rows": 32,
+   "checks": 224,
+   "mismatches": 0,
+   "target": ":CourseOffering + OF_SUBJECT/AT_CAMPUS/IN_TERM/LEADS"
+  },
+  {
+   "table": "enrolment",
+   "rows": 26,
+   "checks": 182,
+   "mismatches": 0,
+   "target": ":Enrolment + HAS_ENROLMENT/IN_PROGRAM/AT_CAMPUS"
+  },
+  {
+   "table": "qualification",
+   "rows": 2,
+   "checks": 12,
+   "mismatches": 0,
+   "target": ":Qualification + AWARDED"
+  },
+  {
+   "table": "placement",
+   "rows": 11,
+   "checks": 77,
+   "mismatches": 0,
+   "target": ":Placement + UNDERTAKES/HOSTED_BY/GOVERNED_BY"
+  },
+  {
+   "table": "invoice",
+   "rows": 42,
+   "checks": 336,
+   "mismatches": 0,
+   "target": ":Invoice + BILLED_TO/RAISED_FOR/FOR_TERM"
+  },
+  {
+   "table": "invoice_line",
+   "rows": 73,
+   "checks": 292,
+   "mismatches": 0,
+   "target": ":InvoiceLine + HAS_LINE"
+  },
+  {
+   "table": "payment",
+   "rows": 33,
+   "checks": 198,
+   "mismatches": 0,
+   "target": ":Payment + SETTLES"
+  },
+  {
+   "table": "guardianship",
+   "rows": 16,
+   "checks": 48,
+   "mismatches": 0,
+   "target": "[:GUARDIAN_OF {relationship_type, is_primary_contact}]"
+  },
+  {
+   "table": "program_subject",
+   "rows": 12,
+   "checks": 36,
+   "mismatches": 0,
+   "target": "[:INCLUDES {is_core, sequence_no}]"
+  },
+  {
+   "table": "subject_prerequisite",
+   "rows": 3,
+   "checks": 3,
+   "mismatches": 0,
+   "target": "[:REQUIRES]"
+  },
+  {
+   "table": "subject_enrolment",
+   "rows": 95,
+   "checks": 285,
+   "mismatches": 0,
+   "target": "[:TOOK {enrolled_on, status}]"
+  },
+  {
+   "table": "result",
+   "rows": 71,
+   "checks": 355,
+   "mismatches": 0,
+   "target": "folded onto [:TOOK] {result_type, grade_letter, competency_outcome, awarded_date}"
+  }
+ ],
+ "rows": 600,
+ "checks": 3143,
+ "mismatches": 0
+}

@@ -1,0 +1,610 @@
+// =============================================================================
+// PRT563 Advanced Data Management - Assessment 4 - Group 2
+// The Industry School: migration of the relational administration database
+// (Assessment 2, SQLite) into Neo4j - OPTIMISED GRAPH MODEL (Model B)
+//
+// Target: Neo4j 5.x (Community or Enterprise), Graph Data Science 2.x
+// Source: 26 CSV files exported one-to-one from the 26 relational tables
+//         (600 rows in total). Copy every *.csv into the DBMS "import" folder.
+// Run:    cypher-shell -u neo4j -p <password> -f import.txt
+//         or paste section by section into Neo4j Browser.
+//
+// Conventions
+//   Labels       : PascalCase nouns             (Person, CourseOffering)
+//   Rel. types   : UPPER_SNAKE_CASE verbs       (LEADS, TOOK, HOLDS_ACCOUNT)
+//   Properties   : snake_case, identical to the source column names, so every
+//                  property can be traced back to its relational column.
+//   Empty CSV fields are guarded with CASE ... END so that an empty value is
+//   never stored as an empty string (a null property is simply not written).
+// =============================================================================
+
+
+// -----------------------------------------------------------------------------
+// 0. OPTIONAL RESET - uncomment only when re-running into a non-empty database
+// -----------------------------------------------------------------------------
+// MATCH (n) DETACH DELETE n;
+
+
+// -----------------------------------------------------------------------------
+// 1. CONSTRAINTS
+//    Every PRIMARY KEY and UNIQUE constraint of the relational schema is
+//    re-created as a uniqueness constraint (Community Edition). Each is backed
+//    automatically by a range index, so every MATCH/MERGE on a key below is an
+//    index seek rather than a label scan. Composite constraints preserve the
+//    composite keys of the reified relationships (course offering, enrolment,
+//    placement, invoice line). Rules that Community Edition cannot declare
+//    (NOT NULL, relationship cardinality) are checked in section 8.
+// -----------------------------------------------------------------------------
+CREATE CONSTRAINT person_id_unique IF NOT EXISTS
+FOR (p:Person) REQUIRE p.person_id IS UNIQUE;
+
+CREATE CONSTRAINT person_email_unique IF NOT EXISTS
+FOR (p:Person) REQUIRE p.email IS UNIQUE;
+
+CREATE CONSTRAINT student_no_unique IF NOT EXISTS
+FOR (s:Student) REQUIRE s.student_no IS UNIQUE;
+
+CREATE CONSTRAINT student_usi_unique IF NOT EXISTS
+FOR (s:Student) REQUIRE s.usi IS UNIQUE;
+
+CREATE CONSTRAINT staff_no_unique IF NOT EXISTS
+FOR (s:Staff) REQUIRE s.staff_no IS UNIQUE;
+
+CREATE CONSTRAINT campus_code_unique IF NOT EXISTS
+FOR (c:Campus) REQUIRE c.campus_code IS UNIQUE;
+
+CREATE CONSTRAINT campus_name_unique IF NOT EXISTS
+FOR (c:Campus) REQUIRE c.campus_name IS UNIQUE;
+
+CREATE CONSTRAINT term_code_unique IF NOT EXISTS
+FOR (t:Term) REQUIRE t.term_code IS UNIQUE;
+
+CREATE CONSTRAINT term_year_number_unique IF NOT EXISTS
+FOR (t:Term) REQUIRE (t.academic_year, t.term_number) IS UNIQUE;
+
+CREATE CONSTRAINT program_code_unique IF NOT EXISTS
+FOR (p:Program) REQUIRE p.program_code IS UNIQUE;
+
+CREATE CONSTRAINT program_name_unique IF NOT EXISTS
+FOR (p:Program) REQUIRE p.program_name IS UNIQUE;
+
+CREATE CONSTRAINT subject_code_unique IF NOT EXISTS
+FOR (s:Subject) REQUIRE s.subject_code IS UNIQUE;
+
+CREATE CONSTRAINT subject_title_unique IF NOT EXISTS
+FOR (s:Subject) REQUIRE s.subject_title IS UNIQUE;
+
+CREATE CONSTRAINT vet_uoc_code_unique IF NOT EXISTS
+FOR (s:VETUnit) REQUIRE s.uoc_code IS UNIQUE;
+
+CREATE CONSTRAINT offering_key_unique IF NOT EXISTS
+FOR (o:CourseOffering) REQUIRE (o.subject_code, o.campus_code, o.term_code) IS UNIQUE;
+
+CREATE CONSTRAINT enrolment_key_unique IF NOT EXISTS
+FOR (e:Enrolment) REQUIRE (e.student_person_id, e.program_code) IS UNIQUE;
+
+CREATE CONSTRAINT qualification_id_unique IF NOT EXISTS
+FOR (q:Qualification) REQUIRE q.qualification_id IS UNIQUE;
+
+CREATE CONSTRAINT certificate_no_unique IF NOT EXISTS
+FOR (q:Qualification) REQUIRE q.certificate_no IS UNIQUE;
+
+CREATE CONSTRAINT employer_abn_unique IF NOT EXISTS
+FOR (e:HostEmployer) REQUIRE e.employer_abn IS UNIQUE;
+
+CREATE CONSTRAINT employer_name_unique IF NOT EXISTS
+FOR (e:HostEmployer) REQUIRE e.employer_name IS UNIQUE;
+
+CREATE CONSTRAINT placement_key_unique IF NOT EXISTS
+FOR (p:Placement) REQUIRE (p.student_person_id, p.employer_abn, p.start_date) IS UNIQUE;
+
+CREATE CONSTRAINT agreement_id_unique IF NOT EXISTS
+FOR (a:PlacementAgreement) REQUIRE a.agreement_id IS UNIQUE;
+
+CREATE CONSTRAINT agreement_policy_unique IF NOT EXISTS
+FOR (a:PlacementAgreement) REQUIRE a.insurance_policy_no IS UNIQUE;
+
+CREATE CONSTRAINT account_no_unique IF NOT EXISTS
+FOR (b:BillingAccount) REQUIRE b.account_no IS UNIQUE;
+
+CREATE CONSTRAINT invoice_no_unique IF NOT EXISTS
+FOR (i:Invoice) REQUIRE i.invoice_no IS UNIQUE;
+
+CREATE CONSTRAINT invoice_line_key_unique IF NOT EXISTS
+FOR (l:InvoiceLine) REQUIRE (l.invoice_no, l.line_no) IS UNIQUE;
+
+CREATE CONSTRAINT payment_id_unique IF NOT EXISTS
+FOR (p:Payment) REQUIRE p.payment_id IS UNIQUE;
+
+// Category rule (Assessment 2 feedback): a billing account belongs to ONE
+// holder only - a student, a guardian or a host employer. account_no is copied
+// onto [:HOLDS_ACCOUNT] so that a relationship property uniqueness constraint
+// (Neo4j 5.7+, available in Community Edition) rejects any second holder,
+// whatever its label. The relational version needed three UNIQUE indexes and
+// six triggers for the same rule (supplementary/a2_feedback_fixes.sql).
+CREATE CONSTRAINT holds_account_unique IF NOT EXISTS
+FOR ()-[h:HOLDS_ACCOUNT]-() REQUIRE h.account_no IS UNIQUE;
+
+
+// -----------------------------------------------------------------------------
+// 2. QUERY-DRIVEN INDEXES
+//    Created only where a use case in queries.txt filters or sorts on a
+//    non-key property. Relationship property indexes (Neo4j 5) let the
+//    engine seek TOOK relationships by status or outcome directly instead of
+//    expanding every student's enrolments.
+// -----------------------------------------------------------------------------
+CREATE INDEX staff_blue_card_expiry IF NOT EXISTS
+FOR (s:Staff) ON (s.blue_card_expiry);
+
+CREATE INDEX enrolment_status IF NOT EXISTS
+FOR (e:Enrolment) ON (e.enrolment_status);
+
+CREATE INDEX invoice_status_due IF NOT EXISTS
+FOR (i:Invoice) ON (i.invoice_status, i.due_date);
+
+CREATE INDEX took_status IF NOT EXISTS
+FOR ()-[r:TOOK]-() ON (r.status);
+
+CREATE INDEX took_competency_outcome IF NOT EXISTS
+FOR ()-[r:TOOK]-() ON (r.competency_outcome);
+
+// Wait until every index is online before loading data.
+CALL db.awaitIndexes(300);
+
+
+// -----------------------------------------------------------------------------
+// 3. NODES - reference data
+// -----------------------------------------------------------------------------
+
+// 3.1 CAMPUS -> (:Campus)
+LOAD CSV WITH HEADERS FROM 'file:///campus.csv' AS row
+MERGE (c:Campus {campus_code: row.campus_code})
+SET c.campus_name = row.campus_name,
+    c.suburb      = row.suburb,
+    c.state       = row.state,
+    c.postcode    = row.postcode,
+    c.opened_date = date(row.opened_date);
+
+// 3.2 TERM -> (:Term)
+LOAD CSV WITH HEADERS FROM 'file:///term.csv' AS row
+MERGE (t:Term {term_code: row.term_code})
+SET t.academic_year = toInteger(row.academic_year),
+    t.term_number   = toInteger(row.term_number),
+    t.start_date    = date(row.start_date),
+    t.end_date      = date(row.end_date);
+
+// 3.3 PROGRAM -> (:Program)
+LOAD CSV WITH HEADERS FROM 'file:///program.csv' AS row
+MERGE (p:Program {program_code: row.program_code})
+SET p.program_name   = row.program_name,
+    p.aqf_level      = toInteger(row.aqf_level),
+    p.duration_terms = toInteger(row.duration_terms);
+
+// 3.4 SUBJECT -> (:Subject)
+//     subject_kind is the relational discriminator of the specialisation.
+//     It is NOT stored as a property: it becomes a label in 3.5 / 3.6.
+LOAD CSV WITH HEADERS FROM 'file:///subject.csv' AS row
+MERGE (s:Subject {subject_code: row.subject_code})
+SET s.subject_title = row.subject_title,
+    s.nominal_hours = toInteger(row.nominal_hours);
+
+// 3.5 QCAA_SUBJECT -> extra label :QCAASubject on the same Subject node
+//     (disjoint specialisation expressed as a second label, no IS_A hop)
+LOAD CSV WITH HEADERS FROM 'file:///qcaa_subject.csv' AS row
+MATCH (s:Subject {subject_code: row.subject_code})
+SET s:QCAASubject,
+    s.syllabus_year    = toInteger(row.syllabus_year),
+    s.subject_category = row.subject_category;
+
+// 3.6 VET_UNIT -> extra label :VETUnit on the same Subject node
+LOAD CSV WITH HEADERS FROM 'file:///vet_unit.csv' AS row
+MATCH (s:Subject {subject_code: row.subject_code})
+SET s:VETUnit,
+    s.uoc_code              = row.uoc_code,
+    s.training_package_code = row.training_package_code;
+
+// 3.7 HOST_EMPLOYER -> (:HostEmployer)
+LOAD CSV WITH HEADERS FROM 'file:///host_employer.csv' AS row
+MERGE (e:HostEmployer {employer_abn: row.employer_abn})
+SET e.employer_name   = row.employer_name,
+    e.industry_sector = row.industry_sector,
+    e.contact_email   = CASE WHEN row.contact_email <> '' THEN row.contact_email END;
+
+// 3.8 BILLING_ACCOUNT -> (:BillingAccount)  - the category (union type)
+LOAD CSV WITH HEADERS FROM 'file:///billing_account.csv' AS row
+MERGE (b:BillingAccount {account_no: row.account_no})
+SET b.account_opened = date(row.account_opened),
+    b.account_status = row.account_status;
+
+// 3.9 PLACEMENT_AGREEMENT -> (:PlacementAgreement)
+LOAD CSV WITH HEADERS FROM 'file:///placement_agreement.csv' AS row
+MERGE (a:PlacementAgreement {agreement_id: row.agreement_id})
+SET a.signed_date         = date(row.signed_date),
+    a.expiry_date         = date(row.expiry_date),
+    a.insurance_policy_no = row.insurance_policy_no;
+
+
+// -----------------------------------------------------------------------------
+// 4. NODES - people (overlapping, total specialisation as multiple labels)
+//    One :Person node per person. STUDENT, STAFF and GUARDIAN rows add a label
+//    and their own properties to that same node, so a person who holds three
+//    roles is still one node - the relational model needed four tables and
+//    three joins to reassemble her.
+// -----------------------------------------------------------------------------
+
+// 4.1 PERSON -> (:Person)
+LOAD CSV WITH HEADERS FROM 'file:///person.csv' AS row
+MERGE (p:Person {person_id: row.person_id})
+SET p.given_name     = row.given_name,
+    p.family_name    = row.family_name,
+    p.preferred_name = row.preferred_name,
+    p.date_of_birth  = date(row.date_of_birth),
+    p.email          = CASE WHEN row.email <> '' THEN row.email END,
+    p.street_address = row.street_address,
+    p.suburb         = row.suburb,
+    p.state          = row.state,
+    p.postcode       = row.postcode;
+
+// 4.2 PERSON_PHONE -> pivoted onto Person (multi-valued attribute)
+//     A person holds at most one number of each type, so the three types
+//     become three optional properties instead of a separate node per number.
+LOAD CSV WITH HEADERS FROM 'file:///person_phone.csv' AS row
+MATCH (p:Person {person_id: row.person_id})
+SET p.phone_mobile = CASE WHEN row.phone_type = 'MOBILE' THEN row.phone_number ELSE p.phone_mobile END,
+    p.phone_home   = CASE WHEN row.phone_type = 'HOME'   THEN row.phone_number ELSE p.phone_home END,
+    p.phone_work   = CASE WHEN row.phone_type = 'WORK'   THEN row.phone_number ELSE p.phone_work END;
+
+// 4.3 STUDENT -> label :Student on the Person node
+LOAD CSV WITH HEADERS FROM 'file:///student.csv' AS row
+MATCH (p:Person {person_id: row.person_id})
+SET p:Student,
+    p.student_no     = row.student_no,
+    p.usi            = CASE WHEN row.usi <> '' THEN row.usi END,
+    p.year_level     = toInteger(row.year_level),
+    p.commenced_date = date(row.commenced_date);
+
+// 4.4 STAFF -> label :Staff on the Person node
+LOAD CSV WITH HEADERS FROM 'file:///staff.csv' AS row
+MATCH (p:Person {person_id: row.person_id})
+SET p:Staff,
+    p.staff_no         = row.staff_no,
+    p.position_title   = row.position_title,
+    p.employment_type  = row.employment_type,
+    p.blue_card_expiry = date(row.blue_card_expiry);
+
+// 4.5 GUARDIAN -> label :Guardian on the Person node
+LOAD CSV WITH HEADERS FROM 'file:///guardian.csv' AS row
+MATCH (p:Person {person_id: row.person_id})
+SET p:Guardian,
+    p.preferred_contact = row.preferred_contact;
+
+
+// -----------------------------------------------------------------------------
+// 5. NODES - reified relationships and dependent entities
+// -----------------------------------------------------------------------------
+
+// 5.1 COURSE_OFFERING -> (:CourseOffering)
+//     The ternary SCHEDULED (subject x campus x term) cannot be a relationship
+//     because property-graph relationships are binary, so it is reified as a
+//     node. Its composite key is kept as properties and protected by the
+//     composite uniqueness constraint in section 1.
+LOAD CSV WITH HEADERS FROM 'file:///course_offering.csv' AS row
+MERGE (o:CourseOffering {subject_code: row.subject_code,
+                         campus_code:  row.campus_code,
+                         term_code:    row.term_code})
+SET o.delivery_mode = row.delivery_mode,
+    o.max_capacity  = toInteger(row.max_capacity);
+
+// 5.2 ENROLMENT -> (:Enrolment)  (student x program, delivered at a campus)
+LOAD CSV WITH HEADERS FROM 'file:///enrolment.csv' AS row
+MERGE (e:Enrolment {student_person_id: row.student_person_id,
+                    program_code:      row.program_code})
+SET e.enrolment_date   = date(row.enrolment_date),
+    e.enrolment_status = row.enrolment_status,
+    e.funding_source   = row.funding_source;
+
+// 5.3 QUALIFICATION -> (:Qualification)
+LOAD CSV WITH HEADERS FROM 'file:///qualification.csv' AS row
+MERGE (q:Qualification {qualification_id: row.qualification_id})
+SET q.qualification_name = row.qualification_name,
+    q.certificate_no     = row.certificate_no,
+    q.awarded_date       = date(row.awarded_date);
+
+// 5.4 PLACEMENT -> (:Placement)  - the aggregation "PLACED WITH"
+//     Kept as a node because PLACEMENT AGREEMENT must attach to it and one
+//     agreement may govern several placements (EER cardinality 0..N : 1..1).
+LOAD CSV WITH HEADERS FROM 'file:///placement.csv' AS row
+MERGE (p:Placement {student_person_id: row.student_person_id,
+                    employer_abn:      row.employer_abn,
+                    start_date:        date(row.start_date)})
+SET p.end_date       = CASE WHEN row.end_date <> '' THEN date(row.end_date) END,
+    p.hours_per_week = toInteger(row.hours_per_week);
+
+// 5.5 INVOICE -> (:Invoice)
+LOAD CSV WITH HEADERS FROM 'file:///invoice.csv' AS row
+MERGE (i:Invoice {invoice_no: row.invoice_no})
+SET i.issue_date     = date(row.issue_date),
+    i.due_date       = date(row.due_date),
+    i.invoice_status = row.invoice_status;
+
+// 5.6 INVOICE_LINE -> (:InvoiceLine)  - weak entity, identified through its
+//     owning invoice; invoice_no is kept so the composite key can be enforced.
+LOAD CSV WITH HEADERS FROM 'file:///invoice_line.csv' AS row
+MERGE (l:InvoiceLine {invoice_no: row.invoice_no, line_no: toInteger(row.line_no)})
+SET l.description = row.description,
+    l.line_amount = toFloat(row.line_amount);
+
+// 5.7 PAYMENT -> (:Payment)
+LOAD CSV WITH HEADERS FROM 'file:///payment.csv' AS row
+MERGE (p:Payment {payment_id: row.payment_id})
+SET p.paid_date      = date(row.paid_date),
+    p.amount_paid    = toFloat(row.amount_paid),
+    p.payment_method = row.payment_method;
+
+
+// -----------------------------------------------------------------------------
+// 6. RELATIONSHIPS - foreign keys and junction tables
+// -----------------------------------------------------------------------------
+
+// 6.1 GUARDIANSHIP (junction table) -> [:GUARDIAN_OF] with its attributes
+LOAD CSV WITH HEADERS FROM 'file:///guardianship.csv' AS row
+MATCH (g:Guardian {person_id: row.guardian_person_id})
+MATCH (s:Student  {person_id: row.student_person_id})
+MERGE (g)-[r:GUARDIAN_OF]->(s)
+SET r.relationship_type  = row.relationship_type,
+    r.is_primary_contact = (row.is_primary_contact = 'Y');
+
+// 6.2 STAFF.supervisor_person_id (unary relationship) -> [:SUPERVISES]
+LOAD CSV WITH HEADERS FROM 'file:///staff.csv' AS row
+WITH row WHERE row.supervisor_person_id <> ''
+MATCH (boss:Staff {person_id: row.supervisor_person_id})
+MATCH (s:Staff    {person_id: row.person_id})
+MERGE (boss)-[:SUPERVISES]->(s);
+
+// 6.3 PROGRAM_SUBJECT (junction table) -> [:INCLUDES]
+LOAD CSV WITH HEADERS FROM 'file:///program_subject.csv' AS row
+MATCH (p:Program {program_code: row.program_code})
+MATCH (s:Subject {subject_code: row.subject_code})
+MERGE (p)-[r:INCLUDES]->(s)
+SET r.is_core     = (row.is_core = 'Y'),
+    r.sequence_no = toInteger(row.sequence_no);
+
+// 6.4 SUBJECT_PREREQUISITE (recursive junction) -> [:REQUIRES]
+LOAD CSV WITH HEADERS FROM 'file:///subject_prerequisite.csv' AS row
+MATCH (s:Subject   {subject_code: row.subject_code})
+MATCH (pre:Subject {subject_code: row.prerequisite_code})
+MERGE (s)-[:REQUIRES]->(pre);
+
+// 6.5 COURSE_OFFERING foreign keys -> the three legs of the reified ternary,
+//     plus the aggregation's lead trainer
+LOAD CSV WITH HEADERS FROM 'file:///course_offering.csv' AS row
+MATCH (o:CourseOffering {subject_code: row.subject_code,
+                         campus_code:  row.campus_code,
+                         term_code:    row.term_code})
+MATCH (s:Subject {subject_code: row.subject_code})
+MATCH (c:Campus  {campus_code:  row.campus_code})
+MATCH (t:Term    {term_code:    row.term_code})
+MATCH (lead:Staff {person_id:   row.lead_staff_id})
+MERGE (o)-[:OF_SUBJECT]->(s)
+MERGE (o)-[:AT_CAMPUS]->(c)
+MERGE (o)-[:IN_TERM]->(t)
+MERGE (lead)-[:LEADS]->(o);
+
+// 6.6 SUBJECT_ENROLMENT + RESULT -> one [:TOOK] relationship per enrolment.
+//     RESULT is a 1:1 dependant of SUBJECT_ENROLMENT (EER cardinality
+//     1..1 : 0..1), so its attributes are folded onto the same relationship.
+LOAD CSV WITH HEADERS FROM 'file:///subject_enrolment.csv' AS row
+MATCH (s:Student {person_id: row.student_person_id})
+MATCH (o:CourseOffering {subject_code: row.subject_code,
+                         campus_code:  row.campus_code,
+                         term_code:    row.term_code})
+MERGE (s)-[r:TOOK]->(o)
+SET r.enrolled_on = date(row.enrolled_on),
+    r.status      = row.se_status;
+
+LOAD CSV WITH HEADERS FROM 'file:///result.csv' AS row
+MATCH (s:Student {person_id: row.student_person_id})
+      -[r:TOOK]->
+      (o:CourseOffering {subject_code: row.subject_code,
+                         campus_code:  row.campus_code,
+                         term_code:    row.term_code})
+SET r.result_type        = row.result_type,
+    r.grade_letter       = CASE WHEN row.grade_letter <> '' THEN row.grade_letter END,
+    r.competency_outcome = CASE WHEN row.competency_outcome <> '' THEN row.competency_outcome END,
+    r.awarded_date       = date(row.awarded_date);
+
+// 6.7 ENROLMENT foreign keys
+LOAD CSV WITH HEADERS FROM 'file:///enrolment.csv' AS row
+MATCH (e:Enrolment {student_person_id: row.student_person_id,
+                    program_code:      row.program_code})
+MATCH (s:Student {person_id:    row.student_person_id})
+MATCH (p:Program {program_code: row.program_code})
+MATCH (c:Campus  {campus_code:  row.campus_code})
+MERGE (s)-[:HAS_ENROLMENT]->(e)
+MERGE (e)-[:IN_PROGRAM]->(p)
+MERGE (e)-[:AT_CAMPUS]->(c);
+
+// 6.8 QUALIFICATION -> awarded on completion of an enrolment
+LOAD CSV WITH HEADERS FROM 'file:///qualification.csv' AS row
+MATCH (q:Qualification {qualification_id: row.qualification_id})
+MATCH (e:Enrolment {student_person_id: row.student_person_id,
+                    program_code:      row.program_code})
+MERGE (e)-[:AWARDED]->(q);
+
+// 6.9 PLACEMENT foreign keys
+LOAD CSV WITH HEADERS FROM 'file:///placement.csv' AS row
+MATCH (pl:Placement {student_person_id: row.student_person_id,
+                     employer_abn:      row.employer_abn,
+                     start_date:        date(row.start_date)})
+MATCH (s:Student {person_id: row.student_person_id})
+MATCH (e:HostEmployer {employer_abn: row.employer_abn})
+MATCH (a:PlacementAgreement {agreement_id: row.agreement_id})
+MERGE (s)-[:UNDERTAKES]->(pl)
+MERGE (pl)-[:HOSTED_BY]->(e)
+MERGE (pl)-[:GOVERNED_BY]->(a);
+
+// 6.10 BILLING_ACCOUNT categorisation -> [:HOLDS_ACCOUNT] from whichever
+//      superclass holds the account (student, guardian or host employer)
+LOAD CSV WITH HEADERS FROM 'file:///student.csv' AS row
+WITH row WHERE row.account_no <> ''
+MATCH (s:Student {person_id: row.person_id})
+MATCH (b:BillingAccount {account_no: row.account_no})
+MERGE (s)-[:HOLDS_ACCOUNT {account_no: row.account_no}]->(b);
+
+LOAD CSV WITH HEADERS FROM 'file:///guardian.csv' AS row
+WITH row WHERE row.account_no <> ''
+MATCH (g:Guardian {person_id: row.person_id})
+MATCH (b:BillingAccount {account_no: row.account_no})
+MERGE (g)-[:HOLDS_ACCOUNT {account_no: row.account_no}]->(b);
+
+LOAD CSV WITH HEADERS FROM 'file:///host_employer.csv' AS row
+WITH row WHERE row.account_no <> ''
+MATCH (e:HostEmployer {employer_abn: row.employer_abn})
+MATCH (b:BillingAccount {account_no: row.account_no})
+MERGE (e)-[:HOLDS_ACCOUNT {account_no: row.account_no}]->(b);
+
+// 6.11 INVOICE foreign keys
+LOAD CSV WITH HEADERS FROM 'file:///invoice.csv' AS row
+MATCH (i:Invoice {invoice_no: row.invoice_no})
+MATCH (b:BillingAccount {account_no: row.account_no})
+MATCH (s:Student {person_id: row.student_person_id})
+MATCH (t:Term {term_code: row.term_code})
+MERGE (i)-[:BILLED_TO]->(b)
+MERGE (i)-[:RAISED_FOR]->(s)
+MERGE (i)-[:FOR_TERM]->(t);
+
+// 6.12 INVOICE_LINE -> identifying relationship to its owner
+LOAD CSV WITH HEADERS FROM 'file:///invoice_line.csv' AS row
+MATCH (i:Invoice {invoice_no: row.invoice_no})
+MATCH (l:InvoiceLine {invoice_no: row.invoice_no, line_no: toInteger(row.line_no)})
+MERGE (i)-[:HAS_LINE]->(l);
+
+// 6.13 PAYMENT -> invoice
+LOAD CSV WITH HEADERS FROM 'file:///payment.csv' AS row
+MATCH (p:Payment {payment_id: row.payment_id})
+MATCH (i:Invoice {invoice_no: row.invoice_no})
+MERGE (p)-[:SETTLES]->(i);
+
+
+// -----------------------------------------------------------------------------
+// 7. DERIVED STRUCTURES (graph-native optimisations; source data unchanged)
+// -----------------------------------------------------------------------------
+
+// 7.1 Term sequence: [:NEXT_TERM] links each term to the following one, so
+//     "previous / next term" questions are one hop instead of date arithmetic.
+MATCH (t:Term)
+WITH t ORDER BY t.academic_year, t.term_number
+WITH collect(t) AS terms
+UNWIND range(0, size(terms) - 2) AS i
+WITH terms[i] AS this_term, terms[i + 1] AS next_term
+MERGE (this_term)-[:NEXT_TERM]->(next_term);
+
+// 7.2 Materialised invoice balance (the derived attribute /total_amount of
+//     the EER model). Lines and payments remain the source of truth; the
+//     three properties are recomputed by re-running this statement.
+MATCH (i:Invoice)
+OPTIONAL MATCH (i)-[:HAS_LINE]->(l:InvoiceLine)
+WITH i, sum(l.line_amount) AS total
+OPTIONAL MATCH (p:Payment)-[:SETTLES]->(i)
+WITH i, total, sum(p.amount_paid) AS paid
+SET i.total_amount  = total,
+    i.amount_paid   = paid,
+    i.balance_owing = total - paid;
+
+
+// -----------------------------------------------------------------------------
+// 8. MIGRATION VALIDATION - every statement should return the value shown
+// -----------------------------------------------------------------------------
+
+// 8.1 Node counts by label (expected: Person 42, Student 24, Staff 10,
+//     Guardian 11, Subject 8, QCAASubject 4, VETUnit 4, Campus 5, Term 4,
+//     Program 4, CourseOffering 32, Enrolment 26, Qualification 2,
+//     HostEmployer 8, Placement 11, PlacementAgreement 11,
+//     BillingAccount 22, Invoice 42, InvoiceLine 73, Payment 33)
+MATCH (n)
+UNWIND labels(n) AS label
+RETURN label, count(*) AS nodes
+ORDER BY label;
+
+// 8.2 Relationship counts by type (expected total 633: AT_CAMPUS 58, AWARDED 2,
+//     BILLED_TO 42, FOR_TERM 42, GOVERNED_BY 11, GUARDIAN_OF 16,
+//     HAS_ENROLMENT 26, HAS_LINE 73, HOLDS_ACCOUNT 22, HOSTED_BY 11,
+//     INCLUDES 12, IN_PROGRAM 26, IN_TERM 32, LEADS 32, NEXT_TERM 3,
+//     OF_SUBJECT 32, RAISED_FOR 42, REQUIRES 3, SETTLES 33, SUPERVISES 9,
+//     TOOK 95, UNDERTAKES 11)
+MATCH ()-[r]->()
+RETURN type(r) AS relationship, count(*) AS relationships
+ORDER BY relationship;
+
+// 8.3 Every relational row accounted for: TOOK relationships carrying a
+//     result must equal the 71 RESULT rows; all TOOK must equal the 95
+//     SUBJECT_ENROLMENT rows.
+MATCH ()-[r:TOOK]->()
+RETURN count(r) AS subject_enrolments,
+       count(r.result_type) AS results;
+
+// 8.4 Categorisation integrity (Assessment 2 feedback). Constraint
+//     holds_account_unique already rejects a second holder; this check also
+//     confirms that every account HAS a holder and that each holder is one of
+//     the category's three superclasses. Expected: no rows.
+MATCH (b:BillingAccount)
+OPTIONAL MATCH (h)-[:HOLDS_ACCOUNT]->(b)
+WITH b, collect(h) AS holders
+WHERE size(holders) <> 1
+   OR NOT all(x IN holders WHERE x:Student OR x:Guardian OR x:HostEmployer)
+RETURN b.account_no AS account_no, size(holders) AS holders;
+
+// 8.5 Specialisation integrity: SUBJECT is disjoint and total.
+//     Expected: overlapping_subjects 0, unspecialised_subjects 0.
+MATCH (s:Subject)
+RETURN sum(CASE WHEN s:QCAASubject AND s:VETUnit THEN 1 ELSE 0 END)      AS overlapping_subjects,
+       sum(CASE WHEN NOT (s:QCAASubject OR s:VETUnit) THEN 1 ELSE 0 END) AS unspecialised_subjects;
+
+// 8.6 PERSON specialisation is total: every person holds at least one role.
+//     Expected: roleless_people 0. Multi-role people are allowed (overlapping).
+MATCH (p:Person)
+RETURN sum(CASE WHEN NOT (p:Student OR p:Staff OR p:Guardian) THEN 1 ELSE 0 END) AS roleless_people,
+       sum(CASE WHEN size([l IN labels(p) WHERE l IN ['Student', 'Staff', 'Guardian']]) > 1
+                THEN 1 ELSE 0 END)                                              AS multi_role_people;
+
+// 8.7 Structural integrity - the graph equivalent of NOT NULL, single-valued
+//     foreign keys. Every reified node must have exactly one of each mandatory
+//     relationship, and an enrolment at most one qualification (the relational
+//     UNIQUE (student_person_id, program_code) on QUALIFICATION).
+//     Expected: one row, violations = 0. (Neo4j 5.23+ / Cypher 25 also shows a
+//     "Feature deprecated" notice for this CALL form; on those versions it can be
+//     written CALL () { ... } - the result is the same.)
+CALL {
+  MATCH (o:CourseOffering)
+  WHERE COUNT { (o)-[:OF_SUBJECT]->() } <> 1 OR COUNT { (o)-[:AT_CAMPUS]->() } <> 1
+     OR COUNT { (o)-[:IN_TERM]->() } <> 1    OR COUNT { (o)<-[:LEADS]-() } <> 1
+  RETURN count(o) AS bad
+  UNION ALL
+  MATCH (e:Enrolment)
+  WHERE COUNT { (e)<-[:HAS_ENROLMENT]-() } <> 1 OR COUNT { (e)-[:IN_PROGRAM]->() } <> 1
+     OR COUNT { (e)-[:AT_CAMPUS]->() } <> 1     OR COUNT { (e)-[:AWARDED]->() } > 1
+  RETURN count(e) AS bad
+  UNION ALL
+  MATCH (p:Placement)
+  WHERE COUNT { (p)<-[:UNDERTAKES]-() } <> 1 OR COUNT { (p)-[:HOSTED_BY]->() } <> 1
+     OR COUNT { (p)-[:GOVERNED_BY]->() } <> 1
+  RETURN count(p) AS bad
+  UNION ALL
+  MATCH (i:Invoice)
+  WHERE COUNT { (i)-[:BILLED_TO]->() } <> 1 OR COUNT { (i)-[:RAISED_FOR]->() } <> 1
+     OR COUNT { (i)-[:FOR_TERM]->() } <> 1
+  RETURN count(i) AS bad
+  UNION ALL
+  MATCH (x)
+  WHERE (x:InvoiceLine AND COUNT { (x)<-[:HAS_LINE]-() } <> 1)
+     OR (x:Payment AND COUNT { (x)-[:SETTLES]->() } <> 1)
+  RETURN count(x) AS bad
+}
+RETURN sum(bad) AS violations;
+
+// 8.8 Constraint demonstration - run ON ITS OWN; it MUST FAIL with
+//     Neo.ClientError.Schema.ConstraintValidationFailed (shown as GQLSTATUS
+//     22N79 "property uniqueness constraint violated" on Neo4j 2025+), because
+//     account ACC-1001 is already held by a guardian and cannot gain a second holder.
+// MATCH (s:Student {person_id: 'P1001'}), (b:BillingAccount {account_no: 'ACC-1001'})
+// CREATE (s)-[:HOLDS_ACCOUNT {account_no: b.account_no}]->(b);

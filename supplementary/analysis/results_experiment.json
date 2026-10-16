@@ -1,0 +1,755 @@
+{
+ "sizes": {
+  "A (baseline)": {
+   "nodes": 569,
+   "rels": 876,
+   "props": 3162,
+   "labels": 23,
+   "types": 25
+  },
+  "B (optimised)": {
+   "nodes": 323,
+   "rels": 633,
+   "props": 2384,
+   "labels": 20,
+   "types": 22
+  },
+  "B - labels": {
+   "nodes": 376,
+   "rels": 686,
+   "props": 2445,
+   "labels": 20,
+   "types": 23
+  },
+  "B - fold": {
+   "nodes": 489,
+   "rels": 799,
+   "props": 3048,
+   "labels": 22,
+   "types": 24
+  },
+  "B - pivot": {
+   "nodes": 350,
+   "rels": 660,
+   "props": 2438,
+   "labels": 21,
+   "types": 23
+  },
+  "B - materialise": {
+   "nodes": 323,
+   "rels": 633,
+   "props": 2258,
+   "labels": 20,
+   "types": 22
+  },
+  "B - next_term": {
+   "nodes": 323,
+   "rels": 630,
+   "props": 2384,
+   "labels": 20,
+   "types": 21
+  },
+  "B - typed": {
+   "nodes": 323,
+   "rels": 633,
+   "props": 2384,
+   "labels": 20,
+   "types": 22
+  }
+ },
+ "costs": {
+  "A (baseline)": {
+   "Q1": {
+    "scanned": 10,
+    "seeks": 0,
+    "expansions": 68,
+    "reads": 20,
+    "conversions": 2,
+    "touched": 50,
+    "accesses": 98
+   },
+   "Q2": {
+    "scanned": 18,
+    "seeks": 0,
+    "expansions": 92,
+    "reads": 84,
+    "conversions": 34,
+    "touched": 47,
+    "accesses": 194
+   },
+   "Q3": {
+    "scanned": 5,
+    "seeks": 0,
+    "expansions": 229,
+    "reads": 158,
+    "conversions": 127,
+    "touched": 234,
+    "accesses": 392
+   },
+   "Q4": {
+    "scanned": 24,
+    "seeks": 0,
+    "expansions": 761,
+    "reads": 249,
+    "conversions": 33,
+    "touched": 196,
+    "accesses": 1034
+   },
+   "W1": {
+    "scanned": 0.0,
+    "seeks": 1.0,
+    "expansions": 17.833333333333332,
+    "reads": 20.458333333333332,
+    "conversions": 0.0,
+    "touched": 17.541666666666668,
+    "accesses": 39.291666666666664
+   },
+   "W2": {
+    "scanned": 0.0,
+    "seeks": 1.0,
+    "expansions": 9.318181818181818,
+    "reads": 9.227272727272727,
+    "conversions": 4.818181818181818,
+    "touched": 10.318181818181818,
+    "accesses": 19.545454545454547
+   }
+  },
+  "B (optimised)": {
+   "Q1": {
+    "scanned": 10,
+    "seeks": 0,
+    "expansions": 31,
+    "reads": 21,
+    "conversions": 0,
+    "touched": 26,
+    "accesses": 62
+   },
+   "Q2": {
+    "scanned": 14,
+    "seeks": 0,
+    "expansions": 75,
+    "reads": 87,
+    "conversions": 0,
+    "touched": 35,
+    "accesses": 176
+   },
+   "Q3": {
+    "scanned": 5,
+    "seeks": 0,
+    "expansions": 123,
+    "reads": 136,
+    "conversions": 0,
+    "touched": 128,
+    "accesses": 264
+   },
+   "Q4": {
+    "scanned": 24,
+    "seeks": 0,
+    "expansions": 554,
+    "reads": 249,
+    "conversions": 0,
+    "touched": 80,
+    "accesses": 827
+   },
+   "W1": {
+    "scanned": 0.0,
+    "seeks": 1.0,
+    "expansions": 6.791666666666667,
+    "reads": 23.25,
+    "conversions": 0.0,
+    "touched": 7.791666666666667,
+    "accesses": 31.041666666666668
+   },
+   "W2": {
+    "scanned": 0.0,
+    "seeks": 1.0,
+    "expansions": 2.909090909090909,
+    "reads": 10.545454545454545,
+    "conversions": 0.0,
+    "touched": 3.909090909090909,
+    "accesses": 14.454545454545455
+   }
+  },
+  "B - labels": {
+   "Q1": {
+    "scanned": 10,
+    "seeks": 0,
+    "expansions": 59,
+    "reads": 21,
+    "conversions": 0,
+    "touched": 41,
+    "accesses": 90
+   },
+   "Q2": {
+    "scanned": 14,
+    "seeks": 0,
+    "expansions": 87,
+    "reads": 87,
+    "conversions": 0,
+    "touched": 41,
+    "accesses": 188
+   },
+   "Q3": {
+    "scanned": 5,
+    "seeks": 0,
+    "expansions": 123,
+    "reads": 136,
+    "conversions": 0,
+    "touched": 128,
+    "accesses": 264
+   },
+   "Q4": {
+    "scanned": 24,
+    "seeks": 0,
+    "expansions": 564,
+    "reads": 249,
+    "conversions": 0,
+    "touched": 88,
+    "accesses": 837
+   },
+   "W1": {
+    "scanned": 0.0,
+    "seeks": 1.0,
+    "expansions": 8.458333333333334,
+    "reads": 23.25,
+    "conversions": 0.0,
+    "touched": 9.458333333333334,
+    "accesses": 32.708333333333336
+   },
+   "W2": {
+    "scanned": 0.0,
+    "seeks": 1.0,
+    "expansions": 3.772727272727273,
+    "reads": 10.545454545454545,
+    "conversions": 0.0,
+    "touched": 4.7727272727272725,
+    "accesses": 15.318181818181818
+   }
+  },
+  "B - fold": {
+   "Q1": {
+    "scanned": 10,
+    "seeks": 0,
+    "expansions": 40,
+    "reads": 20,
+    "conversions": 0,
+    "touched": 35,
+    "accesses": 70
+   },
+   "Q2": {
+    "scanned": 14,
+    "seeks": 0,
+    "expansions": 81,
+    "reads": 87,
+    "conversions": 0,
+    "touched": 41,
+    "accesses": 182
+   },
+   "Q3": {
+    "scanned": 5,
+    "seeks": 0,
+    "expansions": 123,
+    "reads": 136,
+    "conversions": 0,
+    "touched": 128,
+    "accesses": 264
+   },
+   "Q4": {
+    "scanned": 24,
+    "seeks": 0,
+    "expansions": 751,
+    "reads": 249,
+    "conversions": 0,
+    "touched": 188,
+    "accesses": 1024
+   },
+   "W1": {
+    "scanned": 0.0,
+    "seeks": 1.0,
+    "expansions": 14.5,
+    "reads": 21.25,
+    "conversions": 0.0,
+    "touched": 14.708333333333334,
+    "accesses": 36.75
+   },
+   "W2": {
+    "scanned": 0.0,
+    "seeks": 1.0,
+    "expansions": 2.909090909090909,
+    "reads": 10.545454545454545,
+    "conversions": 0.0,
+    "touched": 3.909090909090909,
+    "accesses": 14.454545454545455
+   }
+  },
+  "B - pivot": {
+   "Q1": {
+    "scanned": 10,
+    "seeks": 0,
+    "expansions": 31,
+    "reads": 21,
+    "conversions": 0,
+    "touched": 26,
+    "accesses": 62
+   },
+   "Q2": {
+    "scanned": 14,
+    "seeks": 0,
+    "expansions": 75,
+    "reads": 79,
+    "conversions": 0,
+    "touched": 35,
+    "accesses": 168
+   },
+   "Q3": {
+    "scanned": 5,
+    "seeks": 0,
+    "expansions": 123,
+    "reads": 136,
+    "conversions": 0,
+    "touched": 128,
+    "accesses": 264
+   },
+   "Q4": {
+    "scanned": 24,
+    "seeks": 0,
+    "expansions": 554,
+    "reads": 249,
+    "conversions": 0,
+    "touched": 80,
+    "accesses": 827
+   },
+   "W1": {
+    "scanned": 0.0,
+    "seeks": 1.0,
+    "expansions": 8.458333333333334,
+    "reads": 22.458333333333332,
+    "conversions": 0.0,
+    "touched": 8.958333333333334,
+    "accesses": 31.916666666666668
+   },
+   "W2": {
+    "scanned": 0.0,
+    "seeks": 1.0,
+    "expansions": 3.6363636363636362,
+    "reads": 10.136363636363637,
+    "conversions": 0.0,
+    "touched": 4.636363636363637,
+    "accesses": 14.772727272727273
+   }
+  },
+  "B - materialise": {
+   "Q1": {
+    "scanned": 10,
+    "seeks": 0,
+    "expansions": 31,
+    "reads": 21,
+    "conversions": 0,
+    "touched": 26,
+    "accesses": 62
+   },
+   "Q2": {
+    "scanned": 14,
+    "seeks": 0,
+    "expansions": 75,
+    "reads": 87,
+    "conversions": 0,
+    "touched": 35,
+    "accesses": 176
+   },
+   "Q3": {
+    "scanned": 5,
+    "seeks": 0,
+    "expansions": 229,
+    "reads": 158,
+    "conversions": 0,
+    "touched": 234,
+    "accesses": 392
+   },
+   "Q4": {
+    "scanned": 24,
+    "seeks": 0,
+    "expansions": 554,
+    "reads": 249,
+    "conversions": 0,
+    "touched": 80,
+    "accesses": 827
+   },
+   "W1": {
+    "scanned": 0.0,
+    "seeks": 1.0,
+    "expansions": 6.791666666666667,
+    "reads": 23.25,
+    "conversions": 0.0,
+    "touched": 7.791666666666667,
+    "accesses": 31.041666666666668
+   },
+   "W2": {
+    "scanned": 0.0,
+    "seeks": 1.0,
+    "expansions": 7.7272727272727275,
+    "reads": 9.636363636363637,
+    "conversions": 0.0,
+    "touched": 8.727272727272727,
+    "accesses": 18.363636363636363
+   }
+  },
+  "B - next_term": {
+   "Q1": {
+    "scanned": 10,
+    "seeks": 0,
+    "expansions": 31,
+    "reads": 21,
+    "conversions": 0,
+    "touched": 26,
+    "accesses": 62
+   },
+   "Q2": {
+    "scanned": 18,
+    "seeks": 0,
+    "expansions": 74,
+    "reads": 92,
+    "conversions": 0,
+    "touched": 35,
+    "accesses": 184
+   },
+   "Q3": {
+    "scanned": 5,
+    "seeks": 0,
+    "expansions": 123,
+    "reads": 136,
+    "conversions": 0,
+    "touched": 128,
+    "accesses": 264
+   },
+   "Q4": {
+    "scanned": 24,
+    "seeks": 0,
+    "expansions": 554,
+    "reads": 249,
+    "conversions": 0,
+    "touched": 80,
+    "accesses": 827
+   },
+   "W1": {
+    "scanned": 0.0,
+    "seeks": 1.0,
+    "expansions": 6.791666666666667,
+    "reads": 23.25,
+    "conversions": 0.0,
+    "touched": 7.791666666666667,
+    "accesses": 31.041666666666668
+   },
+   "W2": {
+    "scanned": 0.0,
+    "seeks": 1.0,
+    "expansions": 2.909090909090909,
+    "reads": 10.545454545454545,
+    "conversions": 0.0,
+    "touched": 3.909090909090909,
+    "accesses": 14.454545454545455
+   }
+  },
+  "B - typed": {
+   "Q1": {
+    "scanned": 10,
+    "seeks": 0,
+    "expansions": 31,
+    "reads": 21,
+    "conversions": 2,
+    "touched": 26,
+    "accesses": 62
+   },
+   "Q2": {
+    "scanned": 14,
+    "seeks": 0,
+    "expansions": 75,
+    "reads": 87,
+    "conversions": 29,
+    "touched": 35,
+    "accesses": 176
+   },
+   "Q3": {
+    "scanned": 5,
+    "seeks": 0,
+    "expansions": 123,
+    "reads": 136,
+    "conversions": 21,
+    "touched": 128,
+    "accesses": 264
+   },
+   "Q4": {
+    "scanned": 24,
+    "seeks": 0,
+    "expansions": 554,
+    "reads": 249,
+    "conversions": 33,
+    "touched": 80,
+    "accesses": 827
+   },
+   "W1": {
+    "scanned": 0.0,
+    "seeks": 1.0,
+    "expansions": 6.791666666666667,
+    "reads": 23.25,
+    "conversions": 0.0,
+    "touched": 7.791666666666667,
+    "accesses": 31.041666666666668
+   },
+   "W2": {
+    "scanned": 0.0,
+    "seeks": 1.0,
+    "expansions": 2.909090909090909,
+    "reads": 10.545454545454545,
+    "conversions": 0.0,
+    "touched": 3.909090909090909,
+    "accesses": 14.454545454545455
+   }
+  }
+ },
+ "results": {
+  "Q1": [
+   {
+    "staff_member": "Priya Raman",
+    "position": "Workplace Learning Coordinator",
+    "dependant": "Ethan Brady",
+    "relationship": "Mother",
+    "finding": "CONFLICT",
+    "subject": "SUB-0004 Industry Placement Studies",
+    "campus": "RDLD",
+    "term": "2026T3",
+    "action": "Not yet assessed - reassign assessor now",
+    "eligible_assessors": [
+     "Meena Chandra"
+    ]
+   },
+   {
+    "staff_member": "Meena Chandra",
+    "position": "Trainer and Assessor",
+    "dependant": "Aarav Chandra",
+    "relationship": "Mother",
+    "finding": "No conflict",
+    "subject": null,
+    "campus": null,
+    "term": null,
+    "action": null,
+    "eligible_assessors": []
+   }
+  ],
+  "Q2": [
+   {
+    "staff_member": "Meena Chandra",
+    "position": "Trainer and Assessor",
+    "blue_card_expiry": "2026-09-30",
+    "days_remaining": 16,
+    "risk": "BLOCKER - lapses before 2026T4 starts",
+    "offerings_next_term": [
+     "SUB-0004@CBLT",
+     "SUB-0008@RDLD"
+    ],
+    "students_affected": 3,
+    "escalation_chain": "Meena > Tom > Grace",
+    "manager_contact": "tom.ellery@tis.qld.edu.au"
+   },
+   {
+    "staff_member": "Sarah McKenzie",
+    "position": "Senior Trainer",
+    "blue_card_expiry": "2026-11-28",
+    "days_remaining": 75,
+    "risk": "BLOCKER - lapses during 2026T4",
+    "offerings_next_term": [
+     "SUB-0006@CBLT"
+    ],
+    "students_affected": 3,
+    "escalation_chain": "Sarah > Tom > Grace",
+    "manager_contact": "tom.ellery@tis.qld.edu.au"
+   },
+   {
+    "staff_member": "Daniel Okonjo",
+    "position": "VET Trainer and Assessor",
+    "blue_card_expiry": "2026-10-15",
+    "days_remaining": 31,
+    "risk": "RENEW - not rostered in 2026T4",
+    "offerings_next_term": [],
+    "students_affected": 0,
+    "escalation_chain": "Daniel > Tom > Grace",
+    "manager_contact": "tom.ellery@tis.qld.edu.au"
+   },
+   {
+    "staff_member": "Nadia Petrosyan",
+    "position": "Senior Trainer",
+    "blue_card_expiry": "2026-12-05",
+    "days_remaining": 82,
+    "risk": "RENEW - not rostered in 2026T4",
+    "offerings_next_term": [],
+    "students_affected": 0,
+    "escalation_chain": "Nadia > Tom > Grace",
+    "manager_contact": "tom.ellery@tis.qld.edu.au"
+   }
+  ],
+  "Q3": [
+   {
+    "campus": "Caboolture Campus",
+    "open_invoices": 7,
+    "debtor_students": 4,
+    "balance_owing": 5420.0,
+    "variance_vs_average": 2867.0,
+    "pct_over_90_days": 92.4,
+    "flag": "ABOVE AVERAGE - escalate",
+    "school_average": 2553.0
+   },
+   {
+    "campus": "Ipswich Campus",
+    "open_invoices": 4,
+    "debtor_students": 2,
+    "balance_owing": 3145.0,
+    "variance_vs_average": 592.0,
+    "pct_over_90_days": 100.0,
+    "flag": "ABOVE AVERAGE - escalate",
+    "school_average": 2553.0
+   },
+   {
+    "campus": "Redlands Campus",
+    "open_invoices": 5,
+    "debtor_students": 3,
+    "balance_owing": 2205.0,
+    "variance_vs_average": -348.0,
+    "pct_over_90_days": 69.2,
+    "flag": "within average",
+    "school_average": 2553.0
+   },
+   {
+    "campus": "Eagle Farm Campus",
+    "open_invoices": 4,
+    "debtor_students": 3,
+    "balance_owing": 1740.0,
+    "variance_vs_average": -813.0,
+    "pct_over_90_days": 100.0,
+    "flag": "within average",
+    "school_average": 2553.0
+   },
+   {
+    "campus": "Toowoomba Campus",
+    "open_invoices": 1,
+    "debtor_students": 1,
+    "balance_owing": 255.0,
+    "variance_vs_average": -2298.0,
+    "pct_over_90_days": 100.0,
+    "flag": "within average",
+    "school_average": 2553.0
+   }
+  ],
+  "Q4": [
+   {
+    "student_no": "S2026007",
+    "student": "Lucas Hartley",
+    "program": "PRG101",
+    "subject": "SUB-0008",
+    "term": "2026T3",
+    "status": "COMPLETED",
+    "unmet_prerequisite": "SUB-0001",
+    "prerequisite_history": "2026T1 D",
+    "root_cause": "Enrolled outside program"
+   },
+   {
+    "student_no": "S2026001",
+    "student": "Tali Nguyen",
+    "program": "PRG102",
+    "subject": "SUB-0007",
+    "term": "2026T4",
+    "status": "ENROLLED",
+    "unmet_prerequisite": "SUB-0002",
+    "prerequisite_history": "never attempted",
+    "root_cause": "Enrolled outside program"
+   },
+   {
+    "student_no": "S2026005",
+    "student": "Ethan Brady",
+    "program": "PRG103",
+    "subject": "SUB-0004",
+    "term": "2026T3",
+    "status": "ENROLLED",
+    "unmet_prerequisite": "SUB-0005",
+    "prerequisite_history": "never attempted",
+    "root_cause": "Enrolled outside program"
+   },
+   {
+    "student_no": "S2026003",
+    "student": "Mia Fletcher",
+    "program": "PRG104",
+    "subject": "SUB-0004",
+    "term": "2026T3",
+    "status": "ENROLLED",
+    "unmet_prerequisite": "SUB-0005",
+    "prerequisite_history": "never attempted",
+    "root_cause": "Enrolled outside program"
+   },
+   {
+    "student_no": "S2026014",
+    "student": "Oscar Delaney",
+    "program": "PRG104",
+    "subject": "SUB-0004",
+    "term": "2026T3",
+    "status": "ENROLLED",
+    "unmet_prerequisite": "SUB-0005",
+    "prerequisite_history": "never attempted",
+    "root_cause": "Enrolled outside program"
+   },
+   {
+    "student_no": "S2026001",
+    "student": "Tali Nguyen",
+    "program": "PRG102",
+    "subject": "SUB-0004",
+    "term": "2026T3",
+    "status": "ENROLLED",
+    "unmet_prerequisite": "SUB-0005",
+    "prerequisite_history": "never attempted",
+    "root_cause": "Program design gap"
+   },
+   {
+    "student_no": "S2026011",
+    "student": "Sienna Marsh",
+    "program": "PRG102",
+    "subject": "SUB-0004",
+    "term": "2026T3",
+    "status": "ENROLLED",
+    "unmet_prerequisite": "SUB-0005",
+    "prerequisite_history": "never attempted",
+    "root_cause": "Program design gap"
+   },
+   {
+    "student_no": "S2026017",
+    "student": "Isla Moreau",
+    "program": "PRG102",
+    "subject": "SUB-0004",
+    "term": "2026T3",
+    "status": "ENROLLED",
+    "unmet_prerequisite": "SUB-0005",
+    "prerequisite_history": "never attempted",
+    "root_cause": "Program design gap"
+   },
+   {
+    "student_no": "S2026020",
+    "student": "Malik Traore",
+    "program": "PRG101",
+    "subject": "SUB-0004",
+    "term": "2026T4",
+    "status": "ENROLLED",
+    "unmet_prerequisite": "SUB-0005",
+    "prerequisite_history": "2026T3 NYC",
+    "root_cause": "Progression control failure"
+   },
+   {
+    "student_no": "S2026014",
+    "student": "Oscar Delaney",
+    "program": "PRG104",
+    "subject": "SUB-0008",
+    "term": "2026T2",
+    "status": "COMPLETED",
+    "unmet_prerequisite": "SUB-0001",
+    "prerequisite_history": "2026T1 D",
+    "root_cause": "Progression control failure"
+   }
+  ]
+ }
+}

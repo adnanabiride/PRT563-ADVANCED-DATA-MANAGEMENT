@@ -1,0 +1,184 @@
+// =============================================================================
+// PRT563 Assessment 4 - Group 2 - TASK 5: SIMILARITY USE CASE
+// Work-placement matching for unplaced students
+//
+// Requires: Graph Data Science library 2.x or later; import.txt has been run.
+// Tested:   Neo4j Desktop 2.2.1, Neo4j 2026.09.0 (Cypher 25), GDS 2026.09.0.
+// Question: 13 of the 24 students have no work placement. For each of them,
+//           which host employer is most promising, judged by where their most
+//           similar placed peers were successful - and which similarity notion
+//           should the placement office trust?
+// Similarity notions compared (Section 7 of the report):
+//   what they study     NodeSimilarity JACCARD / OVERLAP / COSINE on Student->Subject
+//   who they study with NodeSimilarity JACCARD / OVERLAP / COSINE on Student->CourseOffering
+//   how well they do    KNN COSINE / PEARSON / EUCLIDEAN on a subject-performance vector
+// =============================================================================
+
+
+// S0  Feature engineering: subject_profile = one value per subject, in
+//     subject_code order: grade points (A 5, B 4, C 3, D 2, E 1; VET competent
+//     4, not yet competent 1; enrolled but not yet graded 3) or 0 if not taken.
+MATCH (j:Subject)
+WITH j ORDER BY j.subject_code
+WITH collect(j) AS subjects
+MATCH (s:Student)
+SET s.subject_profile =
+    [x IN subjects |
+       coalesce(head([(s)-[t:TOOK]->(:CourseOffering)-[:OF_SUBJECT]->(x)
+                      WHERE t.status <> 'WITHDRAWN'
+                      | CASE
+                          WHEN t.grade_letter IS NOT NULL
+                               THEN {A: 5.0, B: 4.0, C: 3.0, D: 2.0, E: 1.0}[t.grade_letter]
+                          WHEN t.competency_outcome IS NOT NULL
+                               THEN {C: 4.0, NYC: 1.0}[t.competency_outcome]
+                          ELSE 3.0
+                        END]), 0.0)]
+RETURN count(s) AS students_profiled;
+
+
+// S1  Drop earlier projections of the same names (safe to re-run)
+UNWIND ['studentSubject', 'studentClass', 'studentProfile'] AS name
+CALL gds.graph.drop(name, false) YIELD graphName
+RETURN graphName;
+
+
+// S2  Bipartite projection Student -> Subject (Cypher projection: TOOK and
+//     OF_SUBJECT are collapsed into one relationship per student and subject).
+//     Expected: nodeCount 32 (24 students + 8 subjects).
+MATCH (s:Student)-[t:TOOK]->(:CourseOffering)-[:OF_SUBJECT]->(j:Subject)
+WHERE t.status <> 'WITHDRAWN'
+WITH DISTINCT s, j
+WITH gds.graph.project('studentSubject', s, j,
+       {sourceNodeLabels: ['Student'], targetNodeLabels: ['Subject']}) AS g
+RETURN g.graphName AS graph, g.nodeCount AS nodes, g.relationshipCount AS relationships;
+
+
+// S3  Bipartite projection Student -> CourseOffering (shared classes)
+MATCH (s:Student)-[t:TOOK]->(o:CourseOffering)
+WHERE t.status <> 'WITHDRAWN'
+WITH gds.graph.project('studentClass', s, o,
+       {sourceNodeLabels: ['Student'], targetNodeLabels: ['CourseOffering']}) AS g
+RETURN g.graphName AS graph, g.nodeCount AS nodes, g.relationshipCount AS relationships;
+
+
+// S4  Node-only projection carrying the performance vector (for KNN).
+//     targetNodeLabels / targetNodeProperties must be set to NULL explicitly:
+//     current GDS versions reject a node-only projection without them.
+MATCH (s:Student)
+WITH gds.graph.project('studentProfile', s, null,
+       {sourceNodeLabels: ['Student'], targetNodeLabels: NULL,
+        sourceNodeProperties: s {.subject_profile}, targetNodeProperties: NULL}) AS g
+RETURN g.graphName AS graph, g.nodeCount AS nodes;
+
+
+// S5  NodeSimilarity - one statement per metric (change similarityMetric to
+//     'OVERLAP' or 'COSINE', or the graph to 'studentClass', to repeat).
+//     topK 3 = each student's three most similar peers.
+CALL gds.nodeSimilarity.stream('studentSubject',
+     {similarityMetric: 'JACCARD', topK: 3})
+YIELD node1, node2, similarity
+WITH gds.util.asNode(node1) AS a, gds.util.asNode(node2) AS b, similarity
+ORDER BY a.person_id, similarity DESC
+RETURN a.preferred_name + ' ' + a.family_name AS student,
+       collect(b.preferred_name + ' ' + b.family_name + ' (' + toString(round(similarity, 3)) + ')')
+         AS three_most_similar
+ORDER BY student;
+
+
+// S6  KNN on the performance vector (EUCLIDEAN shown; also run COSINE and
+//     PEARSON). concurrency 1 + randomSeed make KNN deterministic. GDS KNN is
+//     approximate, so a top-3 list can differ from the exact neighbours where
+//     scores tie or are very close; S9 therefore asks for topK 23 (every peer).
+CALL gds.knn.stream('studentProfile',
+     {nodeProperties: {subject_profile: 'EUCLIDEAN'}, topK: 3,
+      sampleRate: 1.0, deltaThreshold: 0.0, randomSeed: 563, concurrency: 1})
+YIELD node1, node2, similarity
+WITH gds.util.asNode(node1) AS a, gds.util.asNode(node2) AS b, similarity
+ORDER BY a.person_id, similarity DESC
+RETURN a.preferred_name + ' ' + a.family_name AS student,
+       collect(b.preferred_name + ' ' + b.family_name + ' (' + toString(round(similarity, 3)) + ')')
+         AS three_most_similar
+ORDER BY student;
+
+
+// S7  Persist two competing neighbourhoods so they can be compared in Cypher
+CALL gds.nodeSimilarity.write('studentSubject',
+     {similarityMetric: 'JACCARD', topK: 3,
+      writeRelationshipType: 'SIMILAR_SUBJECTS', writeProperty: 'score'})
+YIELD relationshipsWritten
+RETURN relationshipsWritten;
+
+CALL gds.knn.write('studentProfile',
+     {nodeProperties: {subject_profile: 'EUCLIDEAN'}, topK: 3,
+      sampleRate: 1.0, deltaThreshold: 0.0, randomSeed: 563, concurrency: 1,
+      writeRelationshipType: 'SIMILAR_PROFILE', writeProperty: 'score'})
+YIELD relationshipsWritten
+RETURN relationshipsWritten;
+
+
+// S8  Agreement between the two notions: Jaccard overlap of each student's
+//     peer sets, then the average (1 = identical peers, 0 = disjoint).
+MATCH (s:Student)
+WITH s,
+     COLLECT { MATCH (s)-[:SIMILAR_SUBJECTS]->(p) RETURN p } AS by_subjects,
+     COLLECT { MATCH (s)-[:SIMILAR_PROFILE]->(p)  RETURN p } AS by_profile
+WITH s, by_subjects, by_profile,
+     size([p IN by_subjects WHERE p IN by_profile]) AS shared
+RETURN round(avg(toFloat(shared) /
+             (size(by_subjects) + size(by_profile) - shared)), 3) AS mean_peer_agreement;
+
+
+// S9  PLACEMENT RECOMMENDATION (the recommended hybrid): for every unplaced
+//     student, the three most similar PLACED students in the SAME PROGRAM
+//     (KNN, Euclidean, performance vector) vote for their host employer,
+//     weighted by similarity.
+CALL gds.knn.stream('studentProfile',
+     {nodeProperties: {subject_profile: 'EUCLIDEAN'}, topK: 23,
+      sampleRate: 1.0, deltaThreshold: 0.0, randomSeed: 563, concurrency: 1})
+YIELD node1, node2, similarity
+WITH gds.util.asNode(node1) AS s, gds.util.asNode(node2) AS peer, similarity
+WHERE NOT EXISTS { (s)-[:UNDERTAKES]->(:Placement) }
+  AND EXISTS { (peer)-[:UNDERTAKES]->(:Placement) }
+MATCH (s)-[:HAS_ENROLMENT]->(e1:Enrolment)-[:IN_PROGRAM]->(prog:Program)
+      <-[:IN_PROGRAM]-(e2:Enrolment)<-[:HAS_ENROLMENT]-(peer)
+WHERE e1.enrolment_status IN ['ACTIVE', 'COMPLETED']
+  AND e2.enrolment_status IN ['ACTIVE', 'COMPLETED']
+WITH s, prog, peer, similarity
+ORDER BY s.person_id, similarity DESC, peer.person_id
+WITH s, prog, collect({peer: peer, sim: similarity})[0..3] AS top3
+UNWIND top3 AS t
+WITH s, prog, t.peer AS peer, t.sim AS sim
+MATCH (peer)-[:UNDERTAKES]->(:Placement)-[:HOSTED_BY]->(e:HostEmployer)
+WITH s, prog, e, sum(sim) AS vote,
+     collect(peer.preferred_name + ' ' + peer.family_name) AS supporting_peers
+ORDER BY s.person_id, vote DESC, e.employer_name
+WITH s, prog, collect({employer: e.employer_name, vote: vote, peers: supporting_peers}) AS ranked
+RETURN s.preferred_name + ' ' + s.family_name AS student,
+       prog.program_code                      AS program,
+       ranked[0].employer                     AS recommended_employer,
+       round(ranked[0].vote, 3)               AS vote,
+       ranked[0].peers                        AS because_of,
+       [r IN ranked[1..] | r.employer]        AS alternatives
+ORDER BY program, student;
+
+
+// S10 Cold-start diagnostics: unplaced students with NO placed peer in their
+//     program, and host employers that have never taken a student. Neither
+//     can be reached by any similarity-based recommender.
+MATCH (s:Student)-[:HAS_ENROLMENT]->(e:Enrolment {enrolment_status: 'ACTIVE'})-[:IN_PROGRAM]->(p:Program)
+WHERE NOT EXISTS { (s)-[:UNDERTAKES]->() }
+  AND NOT EXISTS { (p)<-[:IN_PROGRAM]-(:Enrolment)<-[:HAS_ENROLMENT]-(:Student)-[:UNDERTAKES]->() }
+WITH collect(DISTINCT p.program_code) AS programs, count(s) AS students
+MATCH (h:HostEmployer)
+WHERE NOT EXISTS { (h)<-[:HOSTED_BY]-() }
+RETURN programs AS programs_without_placed_students, students AS students_affected,
+       collect(h.employer_name + ' (' + h.industry_sector + ')') AS employers_never_used;
+
+
+// S11 Clean up the analytic relationships and in-memory graphs
+MATCH ()-[r:SIMILAR_SUBJECTS|SIMILAR_PROFILE]->()
+DELETE r;
+
+UNWIND ['studentSubject', 'studentClass', 'studentProfile'] AS name
+CALL gds.graph.drop(name, false) YIELD graphName
+RETURN graphName;
